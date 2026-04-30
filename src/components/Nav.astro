@@ -13,6 +13,20 @@ const { links, demoButtonLabel } = Astro.props;
       <img src="/images/Captive Intelligence Logo Long.png" alt="Captive Intelligence" />
     </a>
     <ul class="nav__links">
+      <li class="nav__dropdown">
+        <button class="nav__dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+          Products
+          <svg class="nav__dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="nav__dropdown-menu">
+          <li><a href="#">Data Hub</a></li>
+          <li><a href="https://captiveintelligence.io">News</a></li>
+          <li><a href="https://captiveintelligence.io/upcoming-captive-events/">Events</a></li>
+          <li><a href="https://captiveintelligence.io/category/podcasts/">The Podcast</a></li>
+        </ul>
+      </li>
       {links.map((link) => (
         <li><a href={link.href}>{link.label}</a></li>
       ))}
@@ -26,6 +40,20 @@ const { links, demoButtonLabel } = Astro.props;
   </div>
   <div class="nav__mobile" id="navMobile">
     <ul>
+      <li class="nav-mobile-products">
+        <button class="nav-mobile-products__toggle" id="navMobileProductsToggle" aria-expanded="false">
+          Products
+          <svg class="nav__dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="nav-mobile-products__menu" id="navMobileProductsMenu">
+          <li><a href="#" class="nav-mobile-link">Data Hub</a></li>
+          <li><a class="nav-mobile-link"href="https://captiveintelligence.io">News</a></li>
+          <li><a class="nav-mobile-link"href="https://captiveintelligence.io/upcoming-captive-events/">Events</a></li>
+          <li><a class="nav-mobile-link"href="https://captiveintelligence.io/category/podcasts/">The Podcast</a></li>
+        </ul>
+      </li>
       {links.map((link) => (
         <li><a href={link.href} class="nav-mobile-link">{link.label}</a></li>
       ))}
@@ -55,6 +83,15 @@ const { links, demoButtonLabel } = Astro.props;
     link.addEventListener('click', () => {
       mobileMenu?.classList.remove('open');
     });
+  });
+
+  // Mobile products dropdown toggle
+  const mobileProductsToggle = document.getElementById('navMobileProductsToggle');
+  const mobileProductsMenu = document.getElementById('navMobileProductsMenu');
+  mobileProductsToggle?.addEventListener('click', () => {
+    const isOpen = mobileProductsMenu?.classList.toggle('open');
+    mobileProductsToggle.setAttribute('aria-expanded', String(!!isOpen));
+    mobileProductsToggle.classList.toggle('open', !!isOpen);
   });
 
   // Demo button — dispatch custom event
