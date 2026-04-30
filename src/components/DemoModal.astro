@@ -116,12 +116,12 @@ const { heading, subtext, roles, successHeading, successBody } = Astro.props;
 
   // Form submit — show success (for non-Netlify local dev)
   // On Netlify, the form will POST and redirect; this handles the JS-only case
-  demoForm?.addEventListener('submit', (e) => {
-    // Only intercept if not on Netlify (no form-name header means dev mode)
-    // In production Netlify intercepts at CDN level before this fires for static sites
-    // For the static output we'll let Netlify handle it, but show success in JS-only scenario
+  demoForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const data = new URLSearchParams(new FormData(demoForm) as unknown as Record<string, string>);
+    await fetch('/', { method: 'POST', body: data });
     demoForm.classList.add('hidden');
     formSuccess?.classList.remove('hidden');
+    document.getElementById('modal')?.scrollTo({ top: document.getElementById('modal')!.scrollHeight, behavior: 'smooth' });
   });
 </script>
