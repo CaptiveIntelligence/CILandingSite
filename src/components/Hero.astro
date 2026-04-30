@@ -10,11 +10,10 @@ export interface Props {
   gradientWord: string;
   subtext: string;
   primaryCtaLabel: string;
-  secondaryCtaLabel: string;
   stats: HeroStat[];
 }
 
-const { badge, headline, gradientWord, subtext, primaryCtaLabel, secondaryCtaLabel, stats } = Astro.props;
+const { badge, headline, gradientWord, subtext, primaryCtaLabel, stats } = Astro.props;
 ---
 
 <section class="hero">
@@ -29,7 +28,6 @@ const { badge, headline, gradientWord, subtext, primaryCtaLabel, secondaryCtaLab
       <p class="hero__sub">{subtext}</p>
       <div class="hero__actions">
         <button class="btn btn--primary btn--lg" id="heroDemoBtn">{primaryCtaLabel}</button>
-        <a href="#platform" class="btn btn--ghost btn--lg">{secondaryCtaLabel}</a>
       </div>
       <div class="hero__stats">
         {(stats || []).map((stat, i) => (
