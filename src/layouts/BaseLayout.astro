@@ -1,0 +1,127 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import DemoModal from '../components/DemoModal.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'CI Data Hub — The definitive data platform for captive insurance.' } = Astro.props;
+
+const nav = {
+  links: [
+    { label: 'Platform', href: '/#platform' },
+    { label: 'Data Coverage', href: '/#data' },
+    { label: 'Insights', href: '/#insights' },
+    { label: 'About', href: '/#about' },
+  ],
+  signInLabel: 'Sign In',
+  demoButtonLabel: 'Request Demo',
+};
+
+const footer = {
+  tagline: 'The definitive data platform for captive insurance professionals.',
+  columns: [
+    {
+      heading: 'Platform',
+      links: [
+        { label: 'Features', href: '#' },
+        { label: 'Data Coverage', href: '#' },
+        { label: 'API', href: '#' },
+        { label: 'Integrations', href: '#' },
+      ],
+    },
+    {
+      heading: 'Solutions',
+      links: [
+        { label: 'Captive Managers', href: '#' },
+        { label: 'Captive Owners', href: '#' },
+        { label: 'Advisors', href: '#' },
+        { label: 'Brokers', href: '#' },
+      ],
+    },
+    {
+      heading: 'Company',
+      links: [
+        { label: 'About Us', href: '#' },
+        { label: 'News', href: '#' },
+        { label: 'Careers', href: '#' },
+        { label: 'Contact', href: '#' },
+      ],
+    },
+    {
+      heading: 'Resources',
+      links: [
+        { label: 'Documentation', href: '#' },
+        { label: 'Market Reports', href: '#' },
+        { label: 'Blog', href: '#' },
+        { label: 'Events', href: '#' },
+      ],
+    },
+  ],
+  legalLinks: [
+    { label: 'Privacy Policy', href: '#' },
+    { label: 'Terms of Service', href: '#' },
+    { label: 'Cookie Policy', href: '#' },
+  ],
+  copyright: '© 2026 Captive Intelligence Ltd. All rights reserved.',
+};
+
+const demoModal = {
+  heading: 'Request a Demo',
+  subtext: 'See CI Data Hub in action. Our team will walk you through the platform and answer your questions.',
+  roles: [
+    'Captive Manager',
+    'Captive Owner / Risk Manager',
+    'Advisor / Consultant',
+    'Broker',
+    'Regulator / Domicile Authority',
+    'Other',
+  ],
+  successHeading: 'Demo request received!',
+  successBody:
+    'Thanks for your interest in CI Data Hub. A member of our team will be in touch within one business day to arrange your personalised demo.',
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <Nav
+    links={nav.links}
+    signInLabel={nav.signInLabel}
+    demoButtonLabel={nav.demoButtonLabel}
+  />
+
+  <slot />
+
+  <Footer
+    tagline={footer.tagline}
+    columns={footer.columns}
+    legalLinks={footer.legalLinks}
+    copyright={footer.copyright}
+  />
+
+  <DemoModal
+    heading={demoModal.heading}
+    subtext={demoModal.subtext}
+    roles={demoModal.roles}
+    successHeading={demoModal.successHeading}
+    successBody={demoModal.successBody}
+  />
+
+</body>
+</html>

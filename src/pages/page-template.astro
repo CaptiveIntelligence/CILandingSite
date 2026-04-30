@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page Title — CI Data Hub" description="Page description for SEO.">
+
+  <!-- Page hero -->
+  <section class="page-hero section section--mid">
+    <div class="container">
+      <div class="page-hero__inner">
+        <span class="section__badge">Category Label</span>
+        <h1>Page Headline Goes Here</h1>
+        <p class="page-hero__sub">Supporting subtext that gives context for the page. Keep it to two or three sentences maximum.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content + image (image right) -->
+  <section class="section section--light">
+    <div class="container">
+      <div class="content-split">
+        <div class="content-split__text">
+          <span class="section__badge">Section Label</span>
+          <h2>Section Heading</h2>
+          <p>Body copy goes here. Explain the topic clearly and concisely. Use plain language and keep paragraphs short.</p>
+          <p>A second paragraph if needed. Link out to related pages or actions where relevant.</p>
+          <a href="#" class="btn btn--primary">Call to Action</a>
+        </div>
+        <div class="content-split__media">
+          <img src="/images/placeholder.png" alt="Descriptive alt text" class="content-img" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content + image (image left) -->
+  <section class="section section--mid">
+    <div class="container">
+      <div class="content-split content-split--reverse">
+        <div class="content-split__text">
+          <span class="section__badge">Section Label</span>
+          <h2>Another Section Heading</h2>
+          <p>Body copy for this section. Keep the message focused on one idea per section.</p>
+          <ul class="content-list">
+            <li>Key point one</li>
+            <li>Key point two</li>
+            <li>Key point three</li>
+          </ul>
+        </div>
+        <div class="content-split__media">
+          <img src="/images/placeholder.png" alt="Descriptive alt text" class="content-img" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full-width text block -->
+  <section class="section section--light">
+    <div class="container">
+      <div class="section__header">
+        <span class="section__badge">Section Label</span>
+        <h2>Centred Section Heading</h2>
+        <p>Introductory paragraph for a section that doesn't need a paired image.</p>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* Page hero */
+  .page-hero__inner {
+    max-width: 720px;
+  }
+  .page-hero__inner h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 16px 0 20px;
+  }
+  .page-hero__sub {
+    font-size: 18px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  /* Content split layout */
+  .content-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .content-split--reverse .content-split__text { order: 2; }
+  .content-split--reverse .content-split__media { order: 1; }
+
+  .content-split__text h2 {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 16px 0 16px;
+  }
+  .content-split__text p {
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .content-split__text .btn {
+    margin-top: 8px;
+  }
+
+  .content-img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    display: block;
+  }
+
+  /* Bullet list */
+  .content-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .content-list li {
+    padding-left: 24px;
+    position: relative;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .content-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .content-split,
+    .content-split--reverse .content-split__text,
+    .content-split--reverse .content-split__media {
+      grid-template-columns: 1fr;
+      order: unset;
+    }
+    .content-split {
+      gap: 32px;
+    }
+  }
+</style>
