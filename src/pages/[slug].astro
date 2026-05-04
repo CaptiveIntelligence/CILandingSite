@@ -1,0 +1,88 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const projectId = import.meta.env.SANITY_PROJECT_ID;
+  if (!projectId) return [];
+
+  try {
+    const { sanityClient } = await import('../lib/sanity');
+    const { SIMPLE_PAGE_QUERY } = await import('../lib/queries');
+    const slugsQuery = `*[_type == "simplePage"]{ "slug": slug.current }`;
+    const slugs: { slug: string }[] = await sanityClient.fetch(slugsQuery);
+
+    const pages = await Promise.all(
+      slugs.map(async ({ slug }) => {
+        const page = await sanityClient.fetch(SIMPLE_PAGE_QUERY, { slug });
+        return { params: { slug }, props: { page } };
+      })
+    );
+    return pages;
+  } catch (e) {
+    console.warn('Sanity fetch failed in getStaticPaths:', e);
+    return [];
+  }
+};
+
+const { page } = Astro.props as { page: { title: string; description?: string; body?: any[] } };
+
+function blocksToHtml(blocks: any[]): string {
+  if (!blocks?.length) return '';
+  return blocks.map(block => {
+    if (block._type !== 'block') return '';
+    const inner = block.children?.map((span: any) => {
+      let t = span.text ?? '';
+      if (span.marks?.includes('strong')) t = `<strong>${t}</strong>`;
+      if (span.marks?.includes('em')) t = `<em>${t}</em>`;
+      return t;
+    }).join('') ?? '';
+    const style = block.style ?? 'normal';
+    if (style === 'h2') return `<h2>${inner}</h2>`;
+    if (style === 'h3') return `<h3>${inner}</h3>`;
+    if (style === 'blockquote') return `<blockquote>${inner}</blockquote>`;
+    return `<p>${inner}</p>`;
+  }).join('\n');
+}
+
+const bodyHtml = blocksToHtml(page.body ?? []);
+---
+
+<BaseLayout title={`${page.title} — CI Data Hub`} description={page.description ?? ''}>
+
+  <section class="page-hero section section--mid">
+    <div class="container">
+      <div class="page-hero__inner">
+        <h1>{page.title}</h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--light">
+    <div class="container">
+      <div class="page-body prose" set:html={bodyHtml} />
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-hero__inner h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .prose h2 { font-size: clamp(22px, 3vw, 32px); font-weight: 700; margin: 40px 0 16px; }
+  .prose h3 { font-size: clamp(18px, 2.5vw, 24px); font-weight: 600; margin: 32px 0 12px; }
+  .prose p { color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; max-width: 720px; }
+  .prose blockquote {
+    border-left: 3px solid var(--orange);
+    margin: 24px 0;
+    padding: 12px 20px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .prose strong { color: var(--black); }
+</style>

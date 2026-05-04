@@ -1070,7 +1070,7 @@ input, select, textarea { font-family: var(--font); }
   padding: 40px;
   width: 100%;
   max-width: 520px;
-  max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
   position: relative;
   transform: translateY(20px);

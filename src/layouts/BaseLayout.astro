@@ -11,6 +11,20 @@ export interface Props {
 
 const { title, description = 'CI Data Hub — The definitive data platform for captive insurance.' } = Astro.props;
 
+// Fetch simple pages to inject into footer Resources column
+let simplePages: { title: string; slug: string }[] = [];
+const projectId = import.meta.env.SANITY_PROJECT_ID;
+if (projectId) {
+  try {
+    const { sanityClient } = await import('../lib/sanity');
+    simplePages = await sanityClient.fetch(
+      `*[_type == "simplePage"] | order(_createdAt asc) { title, "slug": slug.current }`
+    );
+  } catch (e) {
+    // fall back to empty
+  }
+}
+
 const nav = {
   links: [
     { label: 'Platform', href: '/#platform' },
@@ -22,7 +36,7 @@ const nav = {
 };
 
 const footer = {
-  tagline: 'The definitive data platform for captive insurance professionals.',
+  tagline: 'The sdefinitive data platform for captive insurance professionals.',
   columns: [
     {
       heading: 'Platform',
@@ -54,10 +68,7 @@ const footer = {
     {
       heading: 'Resources',
       links: [
-        { label: 'Documentation', href: '#' },
-        { label: 'Market Reports', href: '#' },
-        { label: 'Blog', href: '#' },
-        { label: 'Events', href: '#' },
+        ...simplePages.map(p => ({ label: p.title, href: `/${p.slug}` })),
       ],
     },
   ],

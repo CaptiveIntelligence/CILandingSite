@@ -1,6 +1,5 @@
 ---
-import '../styles/global.css';
-import Nav from '../components/Nav.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import LogosBar from '../components/LogosBar.astro';
 import Platform from '../components/Platform.astro';
@@ -9,399 +8,298 @@ import UseCases from '../components/UseCases.astro';
 import Testimonials from '../components/Testimonials.astro';
 import About from '../components/About.astro';
 import CtaSection from '../components/CtaSection.astro';
-import Footer from '../components/Footer.astro';
-import DemoModal from '../components/DemoModal.astro';
 
-// Attempt to fetch from Sanity — fall back gracefully if env vars are missing
-let data: { settings: any; page: any } | null = null;
+let page: any = null;
 
 const projectId = import.meta.env.SANITY_PROJECT_ID;
 if (projectId) {
   try {
     const { sanityClient } = await import('../lib/sanity');
     const { PAGE_QUERY } = await import('../lib/queries');
-    data = await sanityClient.fetch(PAGE_QUERY);
+    const data = await sanityClient.fetch(PAGE_QUERY);
+    page = data?.page ?? null;
   } catch (e) {
     console.warn('Sanity fetch failed, using default content:', e);
   }
 }
 
-// ── Default / fallback content ─────────────────────────────────────────────
-const defaultContent = {
-  settings: {
-    nav: {
-      links: [
-        { label: 'Platform', href: '#platform' },
-        { label: 'Data Coverage', href: '#data' },
-        { label: 'Insights', href: '#insights' },
-        { label: 'About', href: '#about' },
-      ],
-      demoButtonLabel: 'Request Demo',
-    },
+const defaultPage = {
+  hero: {
+    badge: 'Trusted by leading captive managers worldwide',
+    headline: 'The definitive data platform for',
+    gradientWord: 'captive insurance',
+    subtext:
+      'CI Data Hub delivers comprehensive, verified captive insurance data — benchmarks, analytics, and market intelligence — empowering risk managers, captive owners, and advisors to make confident, data-driven decisions.',
+    primaryCtaLabel: 'Request a Demo',
+    stats: [
+      { number: '12,000+', label: 'Captive entities tracked' },
+      { number: '80+', label: 'Domiciles covered' },
+      { number: '30 years', label: 'Of historical data' },
+    ],
   },
-  page: {
-    hero: {
-      badge: 'Trusted by leading captive managers worldwide',
-      headline: 'The definitive data platform for',
-      gradientWord: 'captive insurance',
-      subtext:
-        'CI Data Hub delivers comprehensive, verified captive insurance data — benchmarks, analytics, and market intelligence — empowering risk managers, captive owners, and advisors to make confident, data-driven decisions.',
-      primaryCtaLabel: 'Request a Demo',
-      stats: [
-        { number: '12,000+', label: 'Captive entities tracked' },
-        { number: '80+', label: 'Domiciles covered' },
-        { number: '30 years', label: 'Of historical data' },
-      ],
-    },
-    logosBar: {
-      label: 'Trusted by industry leaders',
-      logos: ['Marsh', 'Aon', 'Willis Towers Watson', 'EY', 'Deloitte', 'KPMG', 'Zurich Insurance', 'AIG'],
-    },
-    platform: {
-      badge: 'The Platform',
-      heading: 'Everything you need to understand the captive market',
-      subtext:
-        'CI Data Hub is the only platform purpose-built for captive insurance data. We aggregate, verify, and structure data from regulatory filings, domicile authorities, and proprietary sources.',
-      features: [
-        {
-          title: 'Captive Benchmarking',
-          description:
-            'Compare your captive\'s performance against peer groups segmented by domicile, industry, size, and structure. Identify outliers, optimise reserves, and validate your risk strategy with confidence.',
-          iconType: 'table',
-          colorScheme: 'orange',
-          isLarge: true,
-          linkLabel: 'Learn more',
-          linkHref: '#',
-        },
-        {
-          title: 'Real-Time Market Intelligence',
-          description:
-            'Stay ahead with curated news, regulatory updates, and market movements delivered in context of your portfolio.',
-          iconType: 'clock',
-          colorScheme: 'blue',
-          isLarge: false,
-          linkLabel: '',
-          linkHref: '',
-        },
-        {
-          title: 'Advanced Analytics',
-          description:
-            'Slice and dice captive data by any dimension. Build custom dashboards and export reports your stakeholders will actually read.',
-          iconType: 'waveform',
-          colorScheme: 'green',
-          isLarge: false,
-          linkLabel: '',
-          linkHref: '',
-        },
-        {
-          title: 'Regulatory Filings Database',
-          description:
-            'Access structured data extracted from domicile filings across all major captive jurisdictions, updated continuously.',
-          iconType: 'document',
-          colorScheme: 'orange',
-          isLarge: false,
-          linkLabel: '',
-          linkHref: '',
-        },
-        {
-          title: 'API & Data Feeds',
-          description:
-            'Integrate captive data directly into your existing workflows with our RESTful API and structured data feeds.',
-          iconType: 'monitor',
-          colorScheme: 'blue',
-          isLarge: false,
-          linkLabel: '',
-          linkHref: '',
-        },
-      ],
-    },
-    dataCoverage: {
-      badge: 'Data Coverage',
-      heading: 'The most comprehensive captive dataset in the world',
-      subtext:
-        'Our data team works directly with regulators, domicile authorities, and industry associations to ensure CI Data Hub reflects the true state of the global captive market.',
-      stats: [
-        {
-          number: '80+',
-          label: 'Domiciles',
-          description: 'From Bermuda and Cayman to Vermont and Luxembourg — all major and emerging domiciles covered.',
-        },
-        {
-          number: '12,000+',
-          label: 'Captive Entities',
-          description: 'Individual captive profiles with ownership, structure, lines of business, and financial data.',
-        },
-        {
-          number: '30 yrs',
-          label: 'Historical Depth',
-          description: 'Longitudinal data stretching back three decades for robust trend and cycle analysis.',
-        },
-        {
-          number: '50+',
-          label: 'Data Fields',
-          description:
-            'Per-entity data points including premiums, loss ratios, investments, dividends, and governance.',
-        },
-      ],
-      detailHeading: 'Purpose-built data infrastructure',
-      detailBody:
-        'CI Data Hub ingests data from over 200 regulatory and proprietary sources. Every data point passes through our verification pipeline before appearing in the platform — so you can trust what you see.',
-      coverageList: [
-        'Annual statutory filings from all major domiciles',
-        'Real-time regulatory announcements and circulars',
-        'M&A transactions and ownership changes',
-        'Loss and reserve development trends',
-        'Investment portfolio compositions',
-        'Management and fronting arrangements',
-      ],
-      domiciles: [
-        { name: 'Bermuda', isActive: true },
-        { name: 'Cayman Islands', isActive: false },
-        { name: 'Vermont', isActive: true },
-        { name: 'Luxembourg', isActive: false },
-        { name: 'Guernsey', isActive: true },
-        { name: 'Isle of Man', isActive: false },
-        { name: 'Malta', isActive: true },
-        { name: 'Delaware', isActive: false },
-        { name: 'Hawaii', isActive: false },
-        { name: 'Singapore', isActive: true },
-        { name: 'Labuan', isActive: false },
-        { name: 'Barbados', isActive: false },
-        { name: 'Dublin', isActive: true },
-        { name: 'Liechtenstein', isActive: false },
-        { name: 'Mauritius', isActive: false },
-        { name: 'Tennessee', isActive: true },
-      ],
-      ctaLabel: 'Request Data Sample',
-    },
-    useCases: {
-      badge: "Who It's For",
-      heading: 'Built for every captive stakeholder',
-      subtext:
-        'Whether you manage a single-parent captive or advise a portfolio of 50, CI Data Hub gives you the intelligence you need.',
-      tabs: [
-        {
-          id: 'tab-managers',
-          label: 'Captive Managers',
-          heading: 'Manage smarter, report faster',
-          body: "CI Data Hub gives captive managers an unrivalled view of the competitive landscape. Benchmark your clients' captives against comparable peers, identify best practices, and produce board-ready reports in minutes — not days.",
-          bullets: [
-            'Peer benchmarking across 12,000+ captives',
-            'Automated regulatory intelligence alerts',
-            'Portfolio-level dashboards for multi-captive managers',
-            'Exportable reports for board and parent presentations',
-          ],
-          ctaLabel: 'See It in Action',
-        },
-        {
-          id: 'tab-owners',
-          label: 'Captive Owners',
-          heading: "Optimise your captive's performance",
-          body: 'Understand how your captive performs relative to industry peers. Validate your risk strategy, identify efficiency opportunities, and make the case for captive investment to your CFO with hard data.',
-          bullets: [
-            'Industry-specific benchmarking cohorts',
-            'Loss ratio and combined ratio trend analysis',
-            'Dividend and capital management benchmarks',
-            'Domicile comparison and feasibility data',
-          ],
-          ctaLabel: 'See It in Action',
-        },
-        {
-          id: 'tab-advisors',
-          label: 'Advisors & Consultants',
-          heading: 'Deliver insight, not just advice',
-          body: 'Differentiate your practice with data. CI Data Hub equips consultants and advisors with the market intelligence to back every recommendation with evidence — from feasibility studies to restructuring proposals.',
-          bullets: [
-            'Feasibility study data and market comparables',
-            'Domicile selection analytics and regulatory profiles',
-            'Market sizing and growth trend reports',
-            'White-label reporting capabilities',
-          ],
-          ctaLabel: 'See It in Action',
-        },
-        {
-          id: 'tab-brokers',
-          label: 'Brokers',
-          heading: 'Identify and win new business',
-          body: 'Use CI Data Hub to identify prospective captive owners, understand existing relationships, and time your outreach with regulatory and market triggers that signal opportunity.',
-          bullets: [
-            'Prospect identification and segmentation',
-            'Ownership and management relationship mapping',
-            'Market movement and trigger alerts',
-            'Competitive landscape analysis',
-          ],
-          ctaLabel: 'See It in Action',
-        },
-      ],
-    },
-    testimonials: {
-      badge: 'What People Say',
-      heading: 'Trusted by professionals across the captive market',
-      items: [
-        {
-          quote:
-            "CI Data Hub has transformed how we benchmark our clients' captives. What used to take weeks of manual research now takes minutes. The depth of data is unmatched in the industry.",
-          name: 'Sarah Mitchell',
-          role: 'Senior Captive Manager, Global Risk Consultants',
-          initials: 'SM',
-          isFeatured: false,
-        },
-        {
-          quote:
-            "The breadth of domicile coverage is genuinely impressive. We've been able to advise clients on emerging domiciles we'd previously have had to research manually. It's changed how we structure feasibility studies entirely.",
-          name: 'James Robertson',
-          role: 'Partner, Insurance Advisory, Big Four Firm',
-          initials: 'JR',
-          isFeatured: true,
-        },
-        {
-          quote:
-            'Having 30 years of historical data at our fingertips lets us show our board exactly how our captive has performed through multiple market cycles. That context is invaluable for strategy conversations.',
-          name: 'Lisa Park',
-          role: 'Head of Captive Operations, Fortune 500 Corporation',
-          initials: 'LP',
-          isFeatured: false,
-        },
-      ],
-    },
-    about: {
-      badge: 'About Captive Intelligence',
-      heading: 'Data specialists for a specialised market',
-      paragraphs: [
-        'Captive Intelligence was founded by industry veterans who saw a clear gap: the captive insurance market lacked the kind of rigorous, structured data infrastructure that other financial markets take for granted.',
-        'We set out to build it. CI Data Hub is the result of years of data collection, regulatory engagement, and platform development — purpose-built to serve the unique needs of captive insurance professionals.',
-        'We work in partnership with leading domicile authorities, industry associations, and data providers to continuously expand and improve our coverage.',
-      ],
-      values: [
-        {
-          iconType: 'check-circle',
-          title: 'Accuracy First',
-          body: "Every data point is verified before publication. We'd rather have less data than wrong data.",
-        },
-        {
-          iconType: 'lightning',
-          title: 'Always Current',
-          body: "Continuous data ingestion means you're always working with the most up-to-date information available.",
-        },
-        {
-          iconType: 'shield',
-          title: 'Secure & Compliant',
-          body: 'Enterprise-grade security with SOC 2 compliance and full data governance controls.',
-        },
-        {
-          iconType: 'users',
-          title: 'Expert Support',
-          body: 'Your dedicated account team includes captive insurance specialists, not just software support.',
-        },
-      ],
-    },
-    cta: {
-      heading: 'Ready to see the power of CI Data Hub?',
-      subtext:
-        'Join leading captive managers, owners, and advisors who rely on CI Data Hub for their most important decisions. Book a personalised demo with our team today.',
-      primaryCtaLabel: 'Request a Demo',
-      secondaryCtaLabel: 'Contact Us',
-      secondaryCtaHref: 'mailto:info@captiveintelligence.com',
-    },
-    footer: {
-      tagline: 'The definitive data platform for captive insurance professionals.',
-      columns: [
-        {
-          heading: 'Platform',
-          links: [
-            { label: 'Features', href: '#' },
-            { label: 'Data Coverage', href: '#' },
-            { label: 'API', href: '#' },
-            { label: 'Integrations', href: '#' },
-          ],
-        },
-        {
-          heading: 'Solutions',
-          links: [
-            { label: 'Captive Managers', href: '#' },
-            { label: 'Captive Owners', href: '#' },
-            { label: 'Advisors', href: '#' },
-            { label: 'Brokers', href: '#' },
-          ],
-        },
-        {
-          heading: 'Company',
-          links: [
-            { label: 'About Us', href: '#' },
-            { label: 'News', href: '#' },
-            { label: 'Careers', href: '#' },
-            { label: 'Contact', href: '#' },
-          ],
-        },
-        {
-          heading: 'Resources',
-          links: [
-            { label: 'Documentation', href: '#' },
-            { label: 'Market Reports', href: '#' },
-            { label: 'Blog', href: '#' },
-            { label: 'Events', href: '#' },
-          ],
-        },
-      ],
-      legalLinks: [
-        { label: 'Privacy Policy', href: '#' },
-        { label: 'Terms of Service', href: '#' },
-        { label: 'Cookie Policy', href: '#' },
-      ],
-      copyright: '© 2026 Captive Intelligence Ltd. All rights reserved.',
-    },
-    demoModal: {
-      heading: 'Request a Demo',
-      subtext:
-        'See CI Data Hub in action. Our team will walk you through the platform and answer your questions.',
-      roles: [
-        'Captive Manager',
-        'Captive Owner / Risk Manager',
-        'Advisor / Consultant',
-        'Broker',
-        'Regulator / Domicile Authority',
-        'Other',
-      ],
-      successHeading: 'Demo request received!',
-      successBody:
-        'Thanks for your interest in CI Data Hub. A member of our team will be in touch within one business day to arrange your personalised demo.',
-    },
+  logosBar: {
+    label: 'Trusted by industry leaders',
+    logos: ['Marsh', 'Aon', 'Willis Towers Watson', 'EY', 'Deloitte', 'KPMG', 'Zurich Insurance', 'AIG'],
+  },
+  platform: {
+    badge: 'The Platform',
+    heading: 'Everything you need to understand the captive market',
+    subtext:
+      'CI Data Hub is the only platform purpose-built for captive insurance data. We aggregate, verify, and structure data from regulatory filings, domicile authorities, and proprietary sources.',
+    features: [
+      {
+        title: 'Captive Benchmarking',
+        description:
+          'Compare your captive\'s performance against peer groups segmented by domicile, industry, size, and structure. Identify outliers, optimise reserves, and validate your risk strategy with confidence.',
+        iconType: 'table',
+        colorScheme: 'orange',
+        isLarge: true,
+        linkLabel: 'Learn more',
+        linkHref: '#',
+      },
+      {
+        title: 'Real-Time Market Intelligence',
+        description:
+          'Stay ahead with curated news, regulatory updates, and market movements delivered in context of your portfolio.',
+        iconType: 'clock',
+        colorScheme: 'blue',
+        isLarge: false,
+        linkLabel: '',
+        linkHref: '',
+      },
+      {
+        title: 'Advanced Analytics',
+        description:
+          'Slice and dice captive data by any dimension. Build custom dashboards and export reports your stakeholders will actually read.',
+        iconType: 'waveform',
+        colorScheme: 'green',
+        isLarge: false,
+        linkLabel: '',
+        linkHref: '',
+      },
+      {
+        title: 'Regulatory Filings Database',
+        description:
+          'Access structured data extracted from domicile filings across all major captive jurisdictions, updated continuously.',
+        iconType: 'document',
+        colorScheme: 'orange',
+        isLarge: false,
+        linkLabel: '',
+        linkHref: '',
+      },
+      {
+        title: 'API & Data Feeds',
+        description:
+          'Integrate captive data directly into your existing workflows with our RESTful API and structured data feeds.',
+        iconType: 'monitor',
+        colorScheme: 'blue',
+        isLarge: false,
+        linkLabel: '',
+        linkHref: '',
+      },
+    ],
+  },
+  dataCoverage: {
+    badge: 'Data Coverage',
+    heading: 'The most comprehensive captive dataset in the world',
+    subtext:
+      'Our data team works directly with regulators, domicile authorities, and industry associations to ensure CI Data Hub reflects the true state of the global captive market.',
+    stats: [
+      {
+        number: '80+',
+        label: 'Domiciles',
+        description: 'From Bermuda and Cayman to Vermont and Luxembourg — all major and emerging domiciles covered.',
+      },
+      {
+        number: '12,000+',
+        label: 'Captive Entities',
+        description: 'Individual captive profiles with ownership, structure, lines of business, and financial data.',
+      },
+      {
+        number: '30 yrs',
+        label: 'Historical Depth',
+        description: 'Longitudinal data stretching back three decades for robust trend and cycle analysis.',
+      },
+      {
+        number: '50+',
+        label: 'Data Fields',
+        description:
+          'Per-entity data points including premiums, loss ratios, investments, dividends, and governance.',
+      },
+    ],
+    detailHeading: 'Purpose-built data infrastructure',
+    detailBody:
+      'CI Data Hub ingests data from over 200 regulatory and proprietary sources. Every data point passes through our verification pipeline before appearing in the platform — so you can trust what you see.',
+    coverageList: [
+      'Annual statutory filings from all major domiciles',
+      'Real-time regulatory announcements and circulars',
+      'M&A transactions and ownership changes',
+      'Loss and reserve development trends',
+      'Investment portfolio compositions',
+      'Management and fronting arrangements',
+    ],
+    domiciles: [
+      { name: 'Bermuda', isActive: true },
+      { name: 'Cayman Islands', isActive: false },
+      { name: 'Vermont', isActive: true },
+      { name: 'Luxembourg', isActive: false },
+      { name: 'Guernsey', isActive: true },
+      { name: 'Isle of Man', isActive: false },
+      { name: 'Malta', isActive: true },
+      { name: 'Delaware', isActive: false },
+      { name: 'Hawaii', isActive: false },
+      { name: 'Singapore', isActive: true },
+      { name: 'Labuan', isActive: false },
+      { name: 'Barbados', isActive: false },
+      { name: 'Dublin', isActive: true },
+      { name: 'Liechtenstein', isActive: false },
+      { name: 'Mauritius', isActive: false },
+      { name: 'Tennessee', isActive: true },
+    ],
+    ctaLabel: 'Request Data Sample',
+  },
+  useCases: {
+    badge: "Who It's For",
+    heading: 'Built for every captive stakeholder',
+    subtext:
+      'Whether you manage a single-parent captive or advise a portfolio of 50, CI Data Hub gives you the intelligence you need.',
+    tabs: [
+      {
+        id: 'tab-managers',
+        label: 'Captive Managers',
+        heading: 'Manage smarter, report faster',
+        body: "CI Data Hub gives captive managers an unrivalled view of the competitive landscape. Benchmark your clients' captives against comparable peers, identify best practices, and produce board-ready reports in minutes — not days.",
+        bullets: [
+          'Peer benchmarking across 12,000+ captives',
+          'Automated regulatory intelligence alerts',
+          'Portfolio-level dashboards for multi-captive managers',
+          'Exportable reports for board and parent presentations',
+        ],
+        ctaLabel: 'See It in Action',
+      },
+      {
+        id: 'tab-owners',
+        label: 'Captive Owners',
+        heading: "Optimise your captive's performance",
+        body: 'Understand how your captive performs relative to industry peers. Validate your risk strategy, identify efficiency opportunities, and make the case for captive investment to your CFO with hard data.',
+        bullets: [
+          'Industry-specific benchmarking cohorts',
+          'Loss ratio and combined ratio trend analysis',
+          'Dividend and capital management benchmarks',
+          'Domicile comparison and feasibility data',
+        ],
+        ctaLabel: 'See It in Action',
+      },
+      {
+        id: 'tab-advisors',
+        label: 'Advisors & Consultants',
+        heading: 'Deliver insight, not just advice',
+        body: 'Differentiate your practice with data. CI Data Hub equips consultants and advisors with the market intelligence to back every recommendation with evidence — from feasibility studies to restructuring proposals.',
+        bullets: [
+          'Feasibility study data and market comparables',
+          'Domicile selection analytics and regulatory profiles',
+          'Market sizing and growth trend reports',
+          'White-label reporting capabilities',
+        ],
+        ctaLabel: 'See It in Action',
+      },
+      {
+        id: 'tab-brokers',
+        label: 'Brokers',
+        heading: 'Identify and win new business',
+        body: 'Use CI Data Hub to identify prospective captive owners, understand existing relationships, and time your outreach with regulatory and market triggers that signal opportunity.',
+        bullets: [
+          'Prospect identification and segmentation',
+          'Ownership and management relationship mapping',
+          'Market movement and trigger alerts',
+          'Competitive landscape analysis',
+        ],
+        ctaLabel: 'See It in Action',
+      },
+    ],
+  },
+  testimonials: {
+    badge: 'What People Say',
+    heading: 'Trusted by professionals across the captive market',
+    items: [
+      {
+        quote:
+          "CI Data Hub has transformed how we benchmark our clients' captives. What used to take weeks of manual research now takes minutes. The depth of data is unmatched in the industry.",
+        name: 'Sarah Mitchell',
+        role: 'Senior Captive Manager, Global Risk Consultants',
+        initials: 'SM',
+        isFeatured: false,
+      },
+      {
+        quote:
+          "The breadth of domicile coverage is genuinely impressive. We've been able to advise clients on emerging domiciles we'd previously have had to research manually. It's changed how we structure feasibility studies entirely.",
+        name: 'James Robertson',
+        role: 'Partner, Insurance Advisory, Big Four Firm',
+        initials: 'JR',
+        isFeatured: true,
+      },
+      {
+        quote:
+          'Having 30 years of historical data at our fingertips lets us show our board exactly how our captive has performed through multiple market cycles. That context is invaluable for strategy conversations.',
+        name: 'Lisa Park',
+        role: 'Head of Captive Operations, Fortune 500 Corporation',
+        initials: 'LP',
+        isFeatured: false,
+      },
+    ],
+  },
+  about: {
+    badge: 'About Captive Intelligence',
+    heading: 'Data specialists for a specialised market',
+    paragraphs: [
+      'Captive Intelligence was founded by industry veterans who saw a clear gap: the captive insurance market lacked the kind of rigorous, structured data infrastructure that other financial markets take for granted.',
+      'We set out to build it. CI Data Hub is the result of years of data collection, regulatory engagement, and platform development — purpose-built to serve the unique needs of captive insurance professionals.',
+      'We work in partnership with leading domicile authorities, industry associations, and data providers to continuously expand and improve our coverage.',
+    ],
+    values: [
+      {
+        iconType: 'check-circle',
+        title: 'Accuracy First',
+        body: "Every data point is verified before publication. We'd rather have less data than wrong data.",
+      },
+      {
+        iconType: 'lightning',
+        title: 'Always Current',
+        body: "Continuous data ingestion means you're always working with the most up-to-date information available.",
+      },
+      {
+        iconType: 'shield',
+        title: 'Secure & Compliant',
+        body: 'Enterprise-grade security with SOC 2 compliance and full data governance controls.',
+      },
+      {
+        iconType: 'users',
+        title: 'Expert Support',
+        body: 'Your dedicated account team includes captive insurance specialists, not just software support.',
+      },
+    ],
+  },
+  cta: {
+    heading: 'Ready to see the power of CI Data Hub?',
+    subtext:
+      'Join leading captive managers, owners, and advisors who rely on CI Data Hub for their most important decisions. Book a personalised demo with our team today.',
+    primaryCtaLabel: 'Request a Demo',
+    secondaryCtaLabel: 'Contact Us',
+    secondaryCtaHref: 'mailto:info@captiveintelligence.com',
   },
 };
 
-// Use Sanity data if available, else fall back
-const settings = data?.settings ?? defaultContent.settings;
-const page = data?.page ?? defaultContent.page;
-
-const nav = settings?.nav ?? defaultContent.settings.nav;
-const hero = page?.hero ?? defaultContent.page.hero;
-const logosBar = page?.logosBar ?? defaultContent.page.logosBar;
-const platform = page?.platform ?? defaultContent.page.platform;
-const dataCoverage = page?.dataCoverage ?? defaultContent.page.dataCoverage;
-const useCases = page?.useCases ?? defaultContent.page.useCases;
-const testimonials = page?.testimonials ?? defaultContent.page.testimonials;
-const about = page?.about ?? defaultContent.page.about;
-const cta = page?.cta ?? defaultContent.page.cta;
-const footer = page?.footer ?? defaultContent.page.footer;
-const demoModal = page?.demoModal ?? defaultContent.page.demoModal;
+const hero = page?.hero ?? defaultPage.hero;
+const logosBar = page?.logosBar ?? defaultPage.logosBar;
+const platform = page?.platform ?? defaultPage.platform;
+const dataCoverage = page?.dataCoverage ?? defaultPage.dataCoverage;
+const useCases = page?.useCases ?? defaultPage.useCases;
+const testimonials = page?.testimonials ?? defaultPage.testimonials;
+const about = page?.about ?? defaultPage.about;
+const cta = page?.cta ?? defaultPage.cta;
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Captive Intelligence — CI Data Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-</head>
-<body>
-
-  <Nav
-    links={nav.links}
-    demoButtonLabel={nav.demoButtonLabel}
-  />
+<BaseLayout title="Captive Intelligence — CI Data Hub">
 
   <Hero
     badge={hero.badge}
@@ -464,36 +362,19 @@ const demoModal = page?.demoModal ?? defaultContent.page.demoModal;
     secondaryCtaHref={cta.secondaryCtaHref}
   />
 
-  <Footer
-    tagline={footer.tagline}
-    columns={footer.columns}
-    legalLinks={footer.legalLinks}
-    copyright={footer.copyright}
-  />
-
-  <DemoModal
-    heading={demoModal.heading}
-    subtext={demoModal.subtext}
-    roles={demoModal.roles}
-    successHeading={demoModal.successHeading}
-    successBody={demoModal.successBody}
-  />
-
   <script>
-    // Scroll-triggered animation observer (page-level)
     document.addEventListener('DOMContentLoaded', () => {
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -40px 0px',
-      };
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      );
 
       document.querySelectorAll(
         '.feature-card, .coverage-card, .testimonial-card, .value-card, .coverage-detail'
@@ -504,5 +385,4 @@ const demoModal = page?.demoModal ?? defaultContent.page.demoModal;
     });
   </script>
 
-</body>
-</html>
+</BaseLayout>
