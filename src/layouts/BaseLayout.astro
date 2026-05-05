@@ -15,9 +15,73 @@ type NavData = { links: { label: string; href: string }[]; demoButtonLabel: stri
 type FooterData = { tagline: string; columns: { heading: string; links: { label: string; href: string }[] }[]; legalLinks: { label: string; href: string }[]; copyright: string };
 type DemoModalData = { heading: string; subtext: string; roles: string[]; successHeading: string; successBody: string };
 
-let nav: NavData = { links: [], demoButtonLabel: 'Request Demo' };
-let footer: FooterData = { tagline: '', columns: [], legalLinks: [], copyright: '' };
-let demoModal: DemoModalData = { heading: 'Request a Demo', subtext: '', roles: [], successHeading: '', successBody: '' };
+let nav: NavData = {
+  links: [
+    { label: 'Platform', href: '/#platform' },
+    { label: 'Data Coverage', href: '/#data' },
+    { label: 'Insights', href: '/#insights' },
+    { label: 'About', href: '/#about' },
+  ],
+  demoButtonLabel: 'Request Demo',
+};
+
+let footer: FooterData = {
+  tagline: 'The definitive data platform for captive insurance professionals.',
+  columns: [
+    {
+      heading: 'Platform',
+      links: [
+        { label: 'Features', href: '#' },
+        { label: 'Data Coverage', href: '#' },
+        { label: 'API', href: '#' },
+        { label: 'Integrations', href: '#' },
+      ],
+    },
+    {
+      heading: 'Solutions',
+      links: [
+        { label: 'Captive Managers', href: '#' },
+        { label: 'Captive Owners', href: '#' },
+        { label: 'Advisors', href: '#' },
+        { label: 'Brokers', href: '#' },
+      ],
+    },
+    {
+      heading: 'Company',
+      links: [
+        { label: 'About Us', href: '#' },
+        { label: 'News', href: '#' },
+        { label: 'Careers', href: '#' },
+        { label: 'Contact', href: '#' },
+      ],
+    },
+    {
+      heading: 'Resources',
+      links: [],
+    },
+  ],
+  legalLinks: [
+    { label: 'Privacy Policy', href: '#' },
+    { label: 'Terms of Service', href: '#' },
+    { label: 'Cookie Policy', href: '#' },
+  ],
+  copyright: '© 2026 Captive Intelligence Ltd. All rights reserved.',
+};
+
+let demoModal: DemoModalData = {
+  heading: 'Request a Demo',
+  subtext: 'See CI Data Hub in action. Our team will walk you through the platform and answer your questions.',
+  roles: [
+    'Captive Manager',
+    'Captive Owner / Risk Manager',
+    'Advisor / Consultant',
+    'Broker',
+    'Regulator / Domicile Authority',
+    'Other',
+  ],
+  successHeading: 'Demo request received!',
+  successBody: 'Thanks for your interest in CI Data Hub. A member of our team will be in touch within one business day to arrange your personalised demo.',
+};
 
 const projectId = import.meta.env.SANITY_PROJECT_ID;
 if (projectId) {
