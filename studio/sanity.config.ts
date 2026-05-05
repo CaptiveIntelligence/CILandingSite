@@ -9,6 +9,7 @@ export default defineConfig([{
   dataset: 'production',
   plugins: [structureTool()],
   schema: { types: schemaTypes },
+	basePath: '/production',
 },{
   name: 'ci-datahub-staging',
   title: 'CI Data Hub Staging',
@@ -16,4 +17,5 @@ export default defineConfig([{
   dataset: 'staging',
   plugins: [structureTool()],
   schema: { types: schemaTypes },
+	basePath: '/staging',
 }]);
