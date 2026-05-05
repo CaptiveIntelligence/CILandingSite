@@ -2,11 +2,18 @@ import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { schemaTypes } from './schemaTypes';
 
-export default defineConfig({
+export default defineConfig([{
   name: 'ci-datahub',
   title: 'CI Data Hub',
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID ?? 'nsu1h65h',
-  dataset: process.env.SANITY_STUDIO_DATASET ?? 'production',
+  projectId: 'nsu1h65h',
+  dataset: 'production',
   plugins: [structureTool()],
   schema: { types: schemaTypes },
-});
+},{
+  name: 'ci-datahub-staging',
+  title: 'CI Data Hub Staging',
+  projectId: 'nsu1h65h',
+  dataset: 'staging',
+  plugins: [structureTool()],
+  schema: { types: schemaTypes },
+}]);
