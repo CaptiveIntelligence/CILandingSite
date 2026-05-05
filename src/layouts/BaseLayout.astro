@@ -11,90 +11,30 @@ export interface Props {
 
 const { title, description = 'CI Data Hub — The definitive data platform for captive insurance.' } = Astro.props;
 
-// Fetch simple pages to inject into footer Resources column
-let simplePages: { title: string; slug: string }[] = [];
+type NavData = { links: { label: string; href: string }[]; demoButtonLabel: string };
+type FooterData = { tagline: string; columns: { heading: string; links: { label: string; href: string }[] }[]; legalLinks: { label: string; href: string }[]; copyright: string };
+type DemoModalData = { heading: string; subtext: string; roles: string[]; successHeading: string; successBody: string };
+
+let nav: NavData = { links: [], demoButtonLabel: 'Request Demo' };
+let footer: FooterData = { tagline: '', columns: [], legalLinks: [], copyright: '' };
+let demoModal: DemoModalData = { heading: 'Request a Demo', subtext: '', roles: [], successHeading: '', successBody: '' };
+
 const projectId = import.meta.env.SANITY_PROJECT_ID;
 if (projectId) {
   try {
     const { sanityClient } = await import('../lib/sanity');
-    simplePages = await sanityClient.fetch(
-      `*[_type == "simplePage"] | order(_createdAt asc) { title, "slug": slug.current }`
-    );
+    const settings = await sanityClient.fetch(`*[_type == "siteSettings"][0]{
+      nav { links[] { label, href }, demoButtonLabel },
+      demoModal { heading, subtext, roles, successHeading, successBody },
+      footer { tagline, columns[] { heading, links[] { label, href } }, legalLinks[] { label, href }, copyright }
+    }`);
+    if (settings?.nav) nav = settings.nav;
+    if (settings?.footer) footer = settings.footer;
+    if (settings?.demoModal) demoModal = settings.demoModal;
   } catch (e) {
-    // fall back to empty
+    // fall back to defaults
   }
 }
-
-const nav = {
-  links: [
-    { label: 'Platform', href: '/#platform' },
-    { label: 'Data Coverage', href: '/#data' },
-    { label: 'Insights', href: '/#insights' },
-    { label: 'About', href: '/#about' },
-  ],
-  demoButtonLabel: 'Request Demo',
-};
-
-const footer = {
-  tagline: 'The sdefinitive data platform for captive insurance professionals.',
-  columns: [
-    {
-      heading: 'Platform',
-      links: [
-        { label: 'Features', href: '#' },
-        { label: 'Data Coverage', href: '#' },
-        { label: 'API', href: '#' },
-        { label: 'Integrations', href: '#' },
-      ],
-    },
-    {
-      heading: 'Solutions',
-      links: [
-        { label: 'Captive Managers', href: '#' },
-        { label: 'Captive Owners', href: '#' },
-        { label: 'Advisors', href: '#' },
-        { label: 'Brokers', href: '#' },
-      ],
-    },
-    {
-      heading: 'Company',
-      links: [
-        { label: 'About Us', href: '#' },
-        { label: 'News', href: '#' },
-        { label: 'Careers', href: '#' },
-        { label: 'Contact', href: '#' },
-      ],
-    },
-    {
-      heading: 'Resources',
-      links: [
-        ...simplePages.map(p => ({ label: p.title, href: `/${p.slug}` })),
-      ],
-    },
-  ],
-  legalLinks: [
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms of Service', href: '#' },
-    { label: 'Cookie Policy', href: '#' },
-  ],
-  copyright: '© 2026 Captive Intelligence Ltd. All rights reserved.',
-};
-
-const demoModal = {
-  heading: 'Request a Demo',
-  subtext: 'See CI Data Hub in action. Our team will walk you through the platform and answer your questions.',
-  roles: [
-    'Captive Manager',
-    'Captive Owner / Risk Manager',
-    'Advisor / Consultant',
-    'Broker',
-    'Regulator / Domicile Authority',
-    'Other',
-  ],
-  successHeading: 'Demo request received!',
-  successBody:
-    'Thanks for your interest in CI Data Hub. A member of our team will be in touch within one business day to arrange your personalised demo.',
-};
 ---
 
 <!DOCTYPE html>
