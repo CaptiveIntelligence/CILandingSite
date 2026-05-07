@@ -5,4 +5,5 @@ export default defineCliConfig({
     projectId: 'nsu1h65h',
     dataset: 'production',
   },
+	studioHost: 'cilandingsite'
 });
