@@ -57,17 +57,20 @@ const maxValue = bars.reduce((m, b) => (b.value > m ? b.value : m), 0);
           <div class="dashboard-mock__dot red"></div>
           <div class="dashboard-mock__dot amber"></div>
           <div class="dashboard-mock__dot green"></div>
-          <span>CI Data Hub — Portfolio Overview</span>
+          <span>Ci DataHub — Key Statistics</span>
         </div>
         <div class="dashboard-mock__body">
           <div class="mock-chart">
             <div class="mock-chart__bars">
               {bars.map((bar, i) => {
-                const h = maxValue > 0 ? Math.round((bar.value / maxValue) * 95) : 0;
+                const h = maxValue > 0 ? Math.round((bar.value / maxValue) * 80) : 0;
                 const isAccent = i % 2 === 1;
                 return (
-                  <div class={`mock-bar${isAccent ? ' mock-bar--accent' : ''}`} style={`--h: ${h}%`}>
-                    <span>{bar.label}</span>
+                  <div class="mock-bar-col">
+                    <span class="mock-bar__value">{bar.value}</span>
+                    <div class={`mock-bar${isAccent ? ' mock-bar--accent' : ''}`} style={`--h: ${h}%`}>
+                      <span>{bar.label}</span>
+                    </div>
                   </div>
                 );
               })}
