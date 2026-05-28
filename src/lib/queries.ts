@@ -2,14 +2,6 @@ export const PAGE_QUERY = `{
   "settings": *[_type == "siteSettings"][0],
   "page": *[_type == "homePage"][0]{
     ...,
-    hero{
-      ...,
-      stats[]{
-        ...,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      }
-    },
     useCases{
       ...,
       tabs[]{

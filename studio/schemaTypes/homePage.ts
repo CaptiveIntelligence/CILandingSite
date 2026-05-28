@@ -43,15 +43,6 @@ export const homePage = defineType({
               fields: [
                 defineField({ name: 'number', title: 'Number', type: 'string' }),
                 defineField({ name: 'label', title: 'Label', type: 'string' }),
-                defineField({
-                  name: 'image',
-                  title: 'Image (shown beneath the stat)',
-                  type: 'image',
-                  options: { hotspot: true },
-                  fields: [
-                    defineField({ name: 'alt', title: 'Alt text', type: 'string' }),
-                  ],
-                }),
               ],
             }),
           ],
