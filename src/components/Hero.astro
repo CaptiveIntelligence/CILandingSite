@@ -2,6 +2,8 @@
 export interface HeroStat {
   number: string;
   label: string;
+  imageUrl?: string;
+  imageAlt?: string;
 }
 
 export interface HeroChartBar {
@@ -29,6 +31,7 @@ const maxValue = bars.reduce((m, b) => (b.value > m ? b.value : m), 0);
 <section class="hero">
   <div class="hero__bg"></div>
   <div class="container">
+    <div class="hero__grid">
     <div class="hero__content">
       <div class="hero__badge">{badge}</div>
       <h1 class="hero__headline">
@@ -38,17 +41,6 @@ const maxValue = bars.reduce((m, b) => (b.value > m ? b.value : m), 0);
       <p class="hero__sub">{subtext}</p>
       <div class="hero__actions">
         <button class="btn btn--primary btn--lg" id="heroDemoBtn">{primaryCtaLabel}</button>
-      </div>
-      <div class="hero__stats">
-        {(stats || []).map((stat, i) => (
-          <>
-            <div class="hero__stat">
-              <span class="hero__stat-number">{stat.number}</span>
-              <span class="hero__stat-label">{stat.label}</span>
-            </div>
-            {i < stats.length - 1 && <div class="hero__stat-divider"></div>}
-          </>
-        ))}
       </div>
     </div>
     <div class="hero__visual">
@@ -90,6 +82,21 @@ const maxValue = bars.reduce((m, b) => (b.value > m ? b.value : m), 0);
           </div>
         </div>
       </div>
+    </div>
+    </div>
+    <div class="hero__stats">
+      {(stats || []).map((stat, i) => (
+        <>
+          <div class="hero__stat">
+            <span class="hero__stat-number">{stat.number}</span>
+            <span class="hero__stat-label">{stat.label}</span>
+            {stat.imageUrl && (
+              <img class="hero__stat-image" src={stat.imageUrl} alt={stat.imageAlt ?? stat.label ?? ''} />
+            )}
+          </div>
+          {i < stats.length - 1 && <div class="hero__stat-divider"></div>}
+        </>
+      ))}
     </div>
   </div>
 </section>

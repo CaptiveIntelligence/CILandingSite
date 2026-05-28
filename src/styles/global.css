@@ -304,6 +304,11 @@ input, select, textarea { font-family: var(--font); }
 .hero > .container {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+.hero__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
@@ -343,7 +348,6 @@ input, select, textarea { font-family: var(--font); }
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
-  margin-bottom: 48px;
 }
 .hero__actions .btn--ghost {
   color: var(--white);
@@ -356,25 +360,41 @@ input, select, textarea { font-family: var(--font); }
 
 .hero__stats {
   display: flex;
-  align-items: center;
-  gap: 24px;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+}
+.hero__stat {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
 }
 .hero__stat-number {
   display: block;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 800;
   color: var(--white);
   line-height: 1;
 }
 .hero__stat-label {
-  font-size: 12px;
-  color: rgba(255,255,255,.5);
+  font-size: 13px;
+  color: rgba(255,255,255,.6);
   font-weight: 500;
-  margin-top: 4px;
+  margin-top: 6px;
+}
+.hero__stat-image {
+  display: block;
+  margin-top: 16px;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
 }
 .hero__stat-divider {
   width: 1px;
-  height: 36px;
+  align-self: stretch;
   background: rgba(255,255,255,.15);
 }
 
@@ -1376,7 +1396,7 @@ input, select, textarea { font-family: var(--font); }
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {
-  .hero > .container { grid-template-columns: 1fr; }
+  .hero__grid { grid-template-columns: 1fr; }
   .hero__visual { display: none; }
   .features-grid { grid-template-columns: 1fr 1fr; }
   .feature-card--large { grid-column: span 2; }
