@@ -541,24 +541,22 @@ input, select, textarea { font-family: var(--font); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border-radius: 50%;
-  background: var(--white);
-  border: 1px solid var(--mid-grey);
-  color: var(--text-muted);
+  padding: 4px;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--text-light);
   cursor: pointer;
-  transition: color 150ms, border-color 150ms, background 150ms;
+  transition: color 150ms ease, transform 150ms ease;
 }
 .logos-bar__arrow:hover {
-  color: var(--black);
-  border-color: var(--text-muted);
-  background: var(--off-white);
+  color: var(--orange-dark);
+  transform: scale(1.1);
 }
 .logos-bar__arrow:focus-visible {
   outline: 2px solid var(--orange-dark);
-  outline-offset: 2px;
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 .logos-bar__dots {
   display: flex;
@@ -685,19 +683,22 @@ input, select, textarea { font-family: var(--font); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--white);
-  border: 1px solid var(--mid-grey);
-  color: var(--black);
-  box-shadow: var(--shadow);
-  transition: all var(--transition);
+  padding: 4px;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--orange-light);
+  cursor: pointer;
+  transition: color 150ms ease, transform 150ms ease;
 }
 .examples__arrow:hover {
   color: var(--orange-dark);
-  border-color: var(--orange-dark);
-  transform: translateY(-1px);
+  transform: scale(1.1);
+}
+.examples__arrow:focus-visible {
+  outline: 2px solid var(--orange-dark);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 .examples__dots {
   display: flex;
@@ -1506,8 +1507,9 @@ input, select, textarea { font-family: var(--font); }
   .footer__bottom { flex-direction: column; gap: 16px; text-align: center; }
   .form-row { grid-template-columns: 1fr; }
   .cta-section__actions { flex-direction: column; align-items: center; }
-  .examples__arrow { width: 36px; height: 36px; }
-  .examples__arrow svg { width: 28px; height: 28px; }
+  .examples__arrow svg,
+  .logos-bar__arrow svg,
+  .use-cases__arrow svg { width: 32px; height: 32px; }
 }
 
 /* ============================================================
