@@ -1,0 +1,123 @@
+---
+export interface ExampleItem {
+  title: string;
+  text: string;
+  imageUrl?: string;
+  imageAlt?: string;
+}
+
+export interface Props {
+  heading: string;
+  subtext?: string;
+  items: ExampleItem[];
+}
+
+const { heading, subtext, items } = Astro.props;
+const slides = items ?? [];
+const hasMultiple = slides.length > 1;
+---
+
+<section class="section section--light examples">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__badge">{heading}</div>
+      {subtext && <p>{subtext}</p>}
+    </div>
+
+    <div class="examples__carousel" data-examples-root>
+      {hasMultiple && (
+        <button
+          type="button"
+          class="examples__arrow examples__arrow--prev"
+          data-examples-prev
+          aria-label="Previous example"
+        >
+          <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      )}
+
+      <div class="examples__viewport">
+        <div class="examples__slides">
+          {slides.map((item) => (
+            <div class="examples__slide" role="group" aria-roledescription="slide" aria-label={item.title}>
+              <h3 class="examples__title">{item.title}</h3>
+              {item.text && <p class="examples__text">{item.text}</p>}
+              {item.imageUrl && (
+                <img
+                  class="examples__image"
+                  src={item.imageUrl}
+                  alt={item.imageAlt ?? item.title ?? ''}
+                  loading="lazy"
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {hasMultiple && (
+        <button
+          type="button"
+          class="examples__arrow examples__arrow--next"
+          data-examples-next
+          aria-label="Next example"
+        >
+          <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      )}
+    </div>
+
+    {hasMultiple && (
+      <div class="examples__dots" role="tablist" aria-label="Examples">
+        {slides.map((item, i) => (
+          <button
+            type="button"
+            class={`examples__dot${i === 0 ? ' is-active' : ''}`}
+            data-examples-dot={i}
+            aria-label={`Go to ${item.title}`}
+          ></button>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<script>
+  const init = () => {
+    document.querySelectorAll('[data-examples-root]').forEach((root) => {
+      const el = root as HTMLElement;
+      if (el.dataset.examplesInit === '1') return;
+      el.dataset.examplesInit = '1';
+
+      const slidesEl = el.querySelector('.examples__slides') as HTMLElement | null;
+      if (!slidesEl) return;
+      const total = slidesEl.children.length;
+      if (total <= 1) return;
+
+      const prevBtn = el.querySelector('[data-examples-prev]') as HTMLButtonElement | null;
+      const nextBtn = el.querySelector('[data-examples-next]') as HTMLButtonElement | null;
+      const dots = el.parentElement?.querySelectorAll<HTMLButtonElement>('[data-examples-dot]');
+
+      let current = 0;
+      const update = (i: number) => {
+        current = (i + total) % total;
+        slidesEl.style.transform = `translateX(-${current * 100}%)`;
+        dots?.forEach((d, di) => d.classList.toggle('is-active', di === current));
+      };
+
+      prevBtn?.addEventListener('click', () => update(current - 1));
+      nextBtn?.addEventListener('click', () => update(current + 1));
+      dots?.forEach((d, di) => d.addEventListener('click', () => update(di)));
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Examples from '../components/Examples.astro';
 import LogosBar from '../components/LogosBar.astro';
 import Platform from '../components/Platform.astro';
 import DataCoverage from '../components/DataCoverage.astro';
@@ -46,6 +47,11 @@ const defaultPage = {
       { label: 'Q1', value: 70 },
       { label: 'Q2', value: 85 },
     ],
+  },
+  examples: {
+    heading: 'Examples',
+    subtext: '',
+    items: [],
   },
   logosBar: [
     {
@@ -310,6 +316,7 @@ const defaultPage = {
 };
 
 const hero = page?.hero ?? defaultPage.hero;
+const examples = page?.examples ?? defaultPage.examples;
 
 const rawLogosBar = page?.logosBar;
 let logosBarSlides;
@@ -339,6 +346,12 @@ const cta = page?.cta ?? defaultPage.cta;
     stats={hero.stats}
     chartBars={hero.chartBars ?? defaultPage.hero.chartBars}
     chartCaption={hero.chartCaption ?? defaultPage.hero.chartCaption}
+  />
+
+  <Examples
+    heading={examples.heading ?? 'Examples'}
+    subtext={examples.subtext}
+    items={examples.items ?? []}
   />
 
   <LogosBar slides={logosBarSlides} />

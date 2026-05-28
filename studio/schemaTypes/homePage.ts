@@ -69,6 +69,43 @@ export const homePage = defineType({
       ],
     }),
 
+    // ── Examples ──────────────────────────────────────────────────────────
+    defineField({
+      name: 'examples',
+      title: 'Examples Section',
+      type: 'object',
+      fields: [
+        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'Examples' }),
+        defineField({ name: 'subtext', title: 'Subtext (optional)', type: 'text', rows: 2 }),
+        defineField({
+          name: 'items',
+          title: 'Carousel Items',
+          type: 'array',
+          of: [
+            defineArrayMember({
+              type: 'object',
+              fields: [
+                defineField({ name: 'title', title: 'Title', type: 'string' }),
+                defineField({ name: 'text', title: 'Text', type: 'text', rows: 3 }),
+                defineField({
+                  name: 'image',
+                  title: 'Screenshot',
+                  type: 'image',
+                  options: { hotspot: true },
+                  fields: [
+                    defineField({ name: 'alt', title: 'Alt text', type: 'string' }),
+                  ],
+                }),
+              ],
+              preview: {
+                select: { title: 'title', subtitle: 'text', media: 'image' },
+              },
+            }),
+          ],
+        }),
+      ],
+    }),
+
     // ── Logos Bar ─────────────────────────────────────────────────────────
     defineField({
       name: 'logosBar',
