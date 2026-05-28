@@ -13,7 +13,7 @@ const { title, description = 'CI Data Hub — The definitive data platform for c
 
 type NavData = { links: { label: string; href: string }[]; demoButtonLabel: string };
 type FooterData = { tagline: string; columns: { heading: string; links: { label: string; href: string }[] }[]; legalLinks: { label: string; href: string }[]; copyright: string };
-type DemoModalData = { heading: string; subtext: string; roles: string[]; successHeading: string; successBody: string };
+type DemoModalData = { heading: string; subtext: string; successHeading: string; successBody: string };
 
 let nav: NavData = {
   links: [
@@ -71,14 +71,6 @@ let footer: FooterData = {
 let demoModal: DemoModalData = {
   heading: 'Request a Demo',
   subtext: 'See CI Data Hub in action. Our team will walk you through the platform and answer your questions.',
-  roles: [
-    'Captive Manager',
-    'Captive Owner / Risk Manager',
-    'Advisor / Consultant',
-    'Broker',
-    'Regulator / Domicile Authority',
-    'Other',
-  ],
   successHeading: 'Demo request received!',
   successBody: 'Thanks for your interest in CI Data Hub. A member of our team will be in touch within one business day to arrange your personalised demo.',
 };
@@ -89,7 +81,7 @@ if (projectId) {
     const { sanityClient } = await import('../lib/sanity');
     const settings = await sanityClient.fetch(`*[_type == "siteSettings"][0]{
       nav { links[] { label, href }, demoButtonLabel },
-      demoModal { heading, subtext, roles, successHeading, successBody },
+      demoModal { heading, subtext, successHeading, successBody },
       footer { tagline, columns[] { heading, links[] { label, href } }, legalLinks[] { label, href }, copyright }
     }`);
     if (settings?.nav) nav = settings.nav;
@@ -131,7 +123,6 @@ if (projectId) {
   <DemoModal
     heading={demoModal.heading}
     subtext={demoModal.subtext}
-    roles={demoModal.roles}
     successHeading={demoModal.successHeading}
     successBody={demoModal.successBody}
   />

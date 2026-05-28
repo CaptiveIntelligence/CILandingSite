@@ -48,12 +48,6 @@ export const siteSettings = defineType({
       fields: [
         defineField({ name: 'heading', title: 'Heading', type: 'string' }),
         defineField({ name: 'subtext', title: 'Subtext', type: 'text', rows: 2 }),
-        defineField({
-          name: 'roles',
-          title: 'Role Options',
-          type: 'array',
-          of: [defineArrayMember({ type: 'string' })],
-        }),
         defineField({ name: 'successHeading', title: 'Success Heading', type: 'string' }),
         defineField({ name: 'successBody', title: 'Success Body', type: 'text', rows: 3 }),
       ],
