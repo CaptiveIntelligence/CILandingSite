@@ -6,6 +6,8 @@ export interface UseCase {
   body: string;
   bullets: string[];
   ctaLabel: string;
+  imageUrl?: string;
+  imageAlt?: string;
 }
 
 export interface Props {
@@ -49,7 +51,16 @@ const { badge, heading, subtext, tabs } = Astro.props;
               </ul>
               <button class="btn btn--primary use-case-demo-btn">{tab.ctaLabel}</button>
             </div>
-            <div class={`use-case-image use-case-image--${tab.id.replace('tab-', '')}`}></div>
+            {tab.imageUrl ? (
+              <img
+                class="use-case-image use-case-image--photo"
+                src={tab.imageUrl}
+                alt={tab.imageAlt ?? tab.label}
+                loading="lazy"
+              />
+            ) : (
+              <div class={`use-case-image use-case-image--${tab.id.replace('tab-', '')}`}></div>
+            )}
           </div>
         </div>
       ))}

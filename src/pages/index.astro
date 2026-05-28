@@ -5,6 +5,7 @@ import LogosBar from '../components/LogosBar.astro';
 import Platform from '../components/Platform.astro';
 import DataCoverage from '../components/DataCoverage.astro';
 import UseCases from '../components/UseCases.astro';
+import UseCasesCarousel from '../components/UseCasesCarousel.astro';
 import Testimonials from '../components/Testimonials.astro';
 import About from '../components/About.astro';
 import CtaSection from '../components/CtaSection.astro';
@@ -36,11 +37,30 @@ const defaultPage = {
       { number: '80+', label: 'Domiciles covered' },
       { number: '30 years', label: 'Of historical data' },
     ],
+    chartCaption: 'Captive Premium Volume by Quarter',
+    chartBars: [
+      { label: 'Q1', value: 60 },
+      { label: 'Q2', value: 80 },
+      { label: 'Q3', value: 55 },
+      { label: 'Q4', value: 90 },
+      { label: 'Q1', value: 70 },
+      { label: 'Q2', value: 85 },
+    ],
   },
-  logosBar: {
-    label: 'Trusted by industry leaders',
-    logos: ['Marsh', 'Aon', 'Willis Towers Watson', 'EY', 'Deloitte', 'KPMG', 'Zurich Insurance', 'AIG'],
-  },
+  logosBar: [
+    {
+      label: 'Trusted by industry leaders',
+      logos: ['Marsh', 'Aon', 'Willis Towers Watson', 'EY', 'Deloitte', 'KPMG', 'Zurich Insurance', 'AIG'],
+    },
+    {
+      label: 'Used by global insurers',
+      logos: ['Allianz', 'Munich Re', 'Swiss Re', 'Berkshire Hathaway', 'Chubb', 'AXA', 'Lloyd’s', 'Hannover Re'],
+    },
+    {
+      label: 'Cited in industry research',
+      logos: ['Financial Times', 'Reuters', 'Bloomberg', 'Insurance Journal', 'Business Insurance', 'The Economist'],
+    },
+  ],
   platform: {
     badge: 'The Platform',
     heading: 'Everything you need to understand the captive market',
@@ -290,7 +310,16 @@ const defaultPage = {
 };
 
 const hero = page?.hero ?? defaultPage.hero;
-const logosBar = page?.logosBar ?? defaultPage.logosBar;
+
+const rawLogosBar = page?.logosBar;
+let logosBarSlides;
+if (Array.isArray(rawLogosBar) && rawLogosBar.length > 0) {
+  logosBarSlides = rawLogosBar;
+} else if (rawLogosBar && typeof rawLogosBar === 'object' && 'logos' in rawLogosBar) {
+  logosBarSlides = [rawLogosBar];
+} else {
+  logosBarSlides = defaultPage.logosBar;
+}
 const platform = page?.platform ?? defaultPage.platform;
 const dataCoverage = page?.dataCoverage ?? defaultPage.dataCoverage;
 const useCases = page?.useCases ?? defaultPage.useCases;
@@ -308,12 +337,11 @@ const cta = page?.cta ?? defaultPage.cta;
     subtext={hero.subtext}
     primaryCtaLabel={hero.primaryCtaLabel}
     stats={hero.stats}
+    chartBars={hero.chartBars ?? defaultPage.hero.chartBars}
+    chartCaption={hero.chartCaption ?? defaultPage.hero.chartCaption}
   />
 
-  <LogosBar
-    label={logosBar.label}
-    logos={logosBar.logos}
-  />
+  <LogosBar slides={logosBarSlides} />
 
   <Platform
     badge={platform.badge}
@@ -335,6 +363,13 @@ const cta = page?.cta ?? defaultPage.cta;
   />
 
   <UseCases
+    badge={useCases.badge}
+    heading={useCases.heading}
+    subtext={useCases.subtext}
+    tabs={useCases.tabs}
+  />
+
+  <UseCasesCarousel
     badge={useCases.badge}
     heading={useCases.heading}
     subtext={useCases.subtext}

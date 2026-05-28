@@ -4,6 +4,11 @@ export interface HeroStat {
   label: string;
 }
 
+export interface HeroChartBar {
+  label: string;
+  value: number;
+}
+
 export interface Props {
   badge: string;
   headline: string;
@@ -11,9 +16,14 @@ export interface Props {
   subtext: string;
   primaryCtaLabel: string;
   stats: HeroStat[];
+  chartBars?: HeroChartBar[];
+  chartCaption?: string;
 }
 
-const { badge, headline, gradientWord, subtext, primaryCtaLabel, stats } = Astro.props;
+const { badge, headline, gradientWord, subtext, primaryCtaLabel, stats, chartBars, chartCaption } = Astro.props;
+
+const bars = (chartBars ?? []).filter((b) => b && typeof b.value === 'number');
+const maxValue = bars.reduce((m, b) => (b.value > m ? b.value : m), 0);
 ---
 
 <section class="hero">
@@ -52,14 +62,17 @@ const { badge, headline, gradientWord, subtext, primaryCtaLabel, stats } = Astro
         <div class="dashboard-mock__body">
           <div class="mock-chart">
             <div class="mock-chart__bars">
-              <div class="mock-bar" style="--h: 60%"><span>Q1</span></div>
-              <div class="mock-bar mock-bar--accent" style="--h: 80%"><span>Q2</span></div>
-              <div class="mock-bar" style="--h: 55%"><span>Q3</span></div>
-              <div class="mock-bar mock-bar--accent" style="--h: 90%"><span>Q4</span></div>
-              <div class="mock-bar" style="--h: 70%"><span>Q1</span></div>
-              <div class="mock-bar mock-bar--accent" style="--h: 85%"><span>Q2</span></div>
+              {bars.map((bar, i) => {
+                const h = maxValue > 0 ? Math.round((bar.value / maxValue) * 95) : 0;
+                const isAccent = i % 2 === 1;
+                return (
+                  <div class={`mock-bar${isAccent ? ' mock-bar--accent' : ''}`} style={`--h: ${h}%`}>
+                    <span>{bar.label}</span>
+                  </div>
+                );
+              })}
             </div>
-            <p class="mock-chart__label">Captive Premium Volume by Quarter</p>
+            <p class="mock-chart__label">{chartCaption}</p>
           </div>
           <div class="mock-metrics">
             <div class="mock-metric">

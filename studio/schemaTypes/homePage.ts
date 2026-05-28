@@ -47,21 +47,54 @@ export const homePage = defineType({
             }),
           ],
         }),
+        defineField({ name: 'chartCaption', title: 'Mock Chart Caption', type: 'string' }),
+        defineField({
+          name: 'chartBars',
+          title: 'Mock Chart Bars',
+          description: 'Bars rendered in the hero dashboard mock. Heights are scaled so the largest value reaches the top of the chart.',
+          type: 'array',
+          of: [
+            defineArrayMember({
+              type: 'object',
+              fields: [
+                defineField({ name: 'label', title: 'Label', type: 'string' }),
+                defineField({ name: 'value', title: 'Value', type: 'number' }),
+              ],
+              preview: {
+                select: { title: 'label', subtitle: 'value' },
+              },
+            }),
+          ],
+        }),
       ],
     }),
 
     // ── Logos Bar ─────────────────────────────────────────────────────────
     defineField({
       name: 'logosBar',
-      title: 'Logos Bar',
-      type: 'object',
-      fields: [
-        defineField({ name: 'label', title: 'Label', type: 'string' }),
-        defineField({
-          name: 'logos',
-          title: 'Company Names',
-          type: 'array',
-          of: [defineArrayMember({ type: 'string' })],
+      title: 'Logos Bar (Carousel Slides)',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({ name: 'label', title: 'Label', type: 'string' }),
+            defineField({
+              name: 'logos',
+              title: 'Company Names',
+              type: 'array',
+              of: [defineArrayMember({ type: 'string' })],
+            }),
+          ],
+          preview: {
+            select: { title: 'label', logos: 'logos' },
+            prepare({ title, logos }) {
+              return {
+                title: title || 'Untitled slide',
+                subtitle: Array.isArray(logos) ? `${logos.length} logos` : '',
+              };
+            },
+          },
         }),
       ],
     }),
@@ -199,6 +232,15 @@ export const homePage = defineType({
                   of: [defineArrayMember({ type: 'string' })],
                 }),
                 defineField({ name: 'ctaLabel', title: 'CTA Label', type: 'string' }),
+                defineField({
+                  name: 'image',
+                  title: 'Image',
+                  type: 'image',
+                  options: { hotspot: true },
+                  fields: [
+                    defineField({ name: 'alt', title: 'Alt text', type: 'string' }),
+                  ],
+                }),
               ],
             }),
           ],

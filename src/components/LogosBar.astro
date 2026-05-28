@@ -1,19 +1,108 @@
 ---
-export interface Props {
+export interface Slide {
   label: string;
   logos: string[];
 }
 
-const { label, logos } = Astro.props;
+export interface Props {
+  slides: Slide[];
+}
+
+const { slides } = Astro.props;
+const hasMultiple = slides.length > 1;
 ---
 
 <section class="logos-bar">
   <div class="container">
-    <p class="logos-bar__label">{label}</p>
-    <div class="logos-bar__track">
-      {logos.map((name) => (
-        <div class="logos-bar__item">{name}</div>
-      ))}
+    <div class="logos-bar__carousel" data-current="0">
+      {hasMultiple && (
+        <button
+          type="button"
+          class="logos-bar__arrow logos-bar__arrow--prev"
+          data-logos-prev
+          aria-label="Previous logos"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      )}
+
+      <div class="logos-bar__viewport">
+        <div class="logos-bar__slides">
+          {slides.map((slide) => (
+            <div class="logos-bar__slide" role="group" aria-roledescription="slide">
+              <p class="logos-bar__label">{slide.label}</p>
+              <div class="logos-bar__track">
+                {slide.logos.map((name) => (
+                  <div class="logos-bar__item">{name}</div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {hasMultiple && (
+        <button
+          type="button"
+          class="logos-bar__arrow logos-bar__arrow--next"
+          data-logos-next
+          aria-label="Next logos"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      )}
     </div>
+
+    {hasMultiple && (
+      <div class="logos-bar__dots" role="tablist" aria-label="Logo slides">
+        {slides.map((_, i) => (
+          <button
+            type="button"
+            class={`logos-bar__dot${i === 0 ? ' is-active' : ''}`}
+            data-logos-dot={i}
+            aria-label={`Go to slide ${i + 1}`}
+          ></button>
+        ))}
+      </div>
+    )}
   </div>
 </section>
+
+<script>
+  const init = () => {
+    document.querySelectorAll('.logos-bar__carousel').forEach((carousel) => {
+      if ((carousel as HTMLElement).dataset.logosInit === '1') return;
+      (carousel as HTMLElement).dataset.logosInit = '1';
+
+      const slidesEl = carousel.querySelector('.logos-bar__slides') as HTMLElement | null;
+      const prev = carousel.querySelector('[data-logos-prev]') as HTMLButtonElement | null;
+      const next = carousel.querySelector('[data-logos-next]') as HTMLButtonElement | null;
+      const dots = carousel.parentElement?.querySelectorAll<HTMLButtonElement>('[data-logos-dot]');
+      if (!slidesEl) return;
+
+      const total = slidesEl.children.length;
+      if (total <= 1) return;
+      let current = 0;
+
+      const update = (i: number) => {
+        current = (i + total) % total;
+        slidesEl.style.transform = `translateX(-${current * 100}%)`;
+        dots?.forEach((d, di) => d.classList.toggle('is-active', di === current));
+      };
+
+      prev?.addEventListener('click', () => update(current - 1));
+      next?.addEventListener('click', () => update(current + 1));
+      dots?.forEach((d, di) => d.addEventListener('click', () => update(di)));
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>

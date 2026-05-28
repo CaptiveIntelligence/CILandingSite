@@ -1,0 +1,172 @@
+---
+export interface UseCase {
+  id: string;
+  label: string;
+  heading: string;
+  body: string;
+  bullets: string[];
+  ctaLabel: string;
+  imageUrl?: string;
+  imageAlt?: string;
+}
+
+export interface Props {
+  badge: string;
+  heading: string;
+  subtext: string;
+  tabs: UseCase[];
+}
+
+const { badge, heading, subtext, tabs } = Astro.props;
+const hasMultiple = tabs.length > 1;
+---
+
+<section class="section section--light" id="insights-carousel">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__badge">{badge}</div>
+      <h2>{heading}</h2>
+      <p>{subtext}</p>
+    </div>
+
+    <div class="use-cases use-cases--carousel" data-usecases-root>
+      {hasMultiple && (
+        <div class="use-cases__header">
+          <button
+            type="button"
+            class="use-cases__arrow use-cases__arrow--prev"
+            data-usecases-prev
+            aria-label="Previous use case"
+          >
+            <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="use-cases__labels-viewport">
+            <div class="use-cases__labels-strip" data-usecases-labels>
+              {tabs.map((tab, i) => (
+                <button
+                  type="button"
+                  class={`use-cases__label${i === 0 ? ' is-active' : ''}`}
+                  data-usecases-label-item={i}
+                  aria-label={`Go to ${tab.label}`}
+                >{tab.label}</button>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="use-cases__arrow use-cases__arrow--next"
+            data-usecases-next
+            aria-label="Next use case"
+          >
+            <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      )}
+
+      <div class="use-cases__carousel" data-usecases-carousel>
+        <div class="use-cases__viewport">
+          <div class="use-cases__slides">
+            {tabs.map((tab) => (
+              <div class="use-cases__slide" role="group" aria-roledescription="slide" aria-label={tab.label}>
+                <div class="use-case-body">
+                  <div class="use-case-text">
+                    <h3>{tab.heading}</h3>
+                    <p>{tab.body}</p>
+                    <ul>
+                      {tab.bullets.map((bullet) => (
+                        <li>{bullet}</li>
+                      ))}
+                    </ul>
+                    <button class="btn btn--primary use-case-demo-btn">{tab.ctaLabel}</button>
+                  </div>
+                  {tab.imageUrl ? (
+                    <img
+                      class="use-case-image use-case-image--photo"
+                      src={tab.imageUrl}
+                      alt={tab.imageAlt ?? tab.label}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class={`use-case-image use-case-image--${tab.id.replace('tab-', '')}`}></div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {hasMultiple && (
+        <div class="use-cases__dots" role="tablist" aria-label="Use cases">
+          {tabs.map((tab, i) => (
+            <button
+              type="button"
+              class={`use-cases__dot${i === 0 ? ' is-active' : ''}`}
+              data-usecases-dot={i}
+              aria-label={`Go to ${tab.label}`}
+            ></button>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<script>
+  const init = () => {
+    document.querySelectorAll('[data-usecases-root]').forEach((root) => {
+      const el = root as HTMLElement;
+      if (el.dataset.usecasesInit === '1') return;
+      el.dataset.usecasesInit = '1';
+
+      const slidesEl = el.querySelector('.use-cases__slides') as HTMLElement | null;
+      if (!slidesEl) return;
+      const total = slidesEl.children.length;
+      if (total <= 1) return;
+
+      const prevBtn = el.querySelector('[data-usecases-prev]') as HTMLButtonElement | null;
+      const nextBtn = el.querySelector('[data-usecases-next]') as HTMLButtonElement | null;
+      const stripEl = el.querySelector('[data-usecases-labels]') as HTMLElement | null;
+      const labelBtns = el.querySelectorAll<HTMLButtonElement>('[data-usecases-label-item]');
+      const dots = el.querySelectorAll<HTMLButtonElement>('[data-usecases-dot]');
+
+      let current = 0;
+      const slotPercent = 100 / 3;
+
+      const update = (i: number) => {
+        current = Math.max(0, Math.min(total - 1, i));
+        slidesEl.style.transform = `translateX(-${current * 100}%)`;
+        if (stripEl) {
+          stripEl.style.transform = `translateX(${(1 - current) * slotPercent}%)`;
+        }
+        labelBtns.forEach((b, bi) => b.classList.toggle('is-active', bi === current));
+        dots.forEach((d, di) => d.classList.toggle('is-active', di === current));
+      };
+
+      prevBtn?.addEventListener('click', () => update(current - 1));
+      nextBtn?.addEventListener('click', () => update(current + 1));
+      labelBtns.forEach((b, bi) => b.addEventListener('click', () => update(bi)));
+      dots.forEach((d, di) => d.addEventListener('click', () => update(di)));
+
+      update(0);
+    });
+
+    document.querySelectorAll('.use-cases--carousel .use-case-demo-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        window.dispatchEvent(new CustomEvent('openDemoModal'));
+      });
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
