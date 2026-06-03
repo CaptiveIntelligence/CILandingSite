@@ -45,14 +45,25 @@ const hasMultiple = tabs.length > 1;
 
           <div class="use-cases__labels-viewport">
             <div class="use-cases__labels-strip" data-usecases-labels>
-              {tabs.map((tab, i) => (
-                <button
-                  type="button"
-                  class={`use-cases__label${i === 0 ? ' is-active' : ''}`}
-                  data-usecases-label-item={i}
-                  aria-label={`Go to ${tab.label}`}
-                >{tab.label}</button>
-              ))}
+              <button
+                type="button"
+                class="use-cases__label"
+                data-usecases-label-prev
+                aria-label="Previous use case"
+              ></button>
+              <button
+                type="button"
+                class="use-cases__label is-active"
+                data-usecases-label-current
+                aria-current="true"
+                disabled
+              ></button>
+              <button
+                type="button"
+                class="use-cases__label"
+                data-usecases-label-next
+                aria-label="Next use case"
+              ></button>
             </div>
           </div>
 
@@ -117,8 +128,9 @@ const hasMultiple = tabs.length > 1;
     </div>
   </div>
 </section>
-
 <script>
+  import { bindSwipe } from '../lib/carouselSwipe';
+
   const init = () => {
     document.querySelectorAll('[data-usecases-root]').forEach((root) => {
       const el = root as HTMLElement;
@@ -132,27 +144,38 @@ const hasMultiple = tabs.length > 1;
 
       const prevBtn = el.querySelector('[data-usecases-prev]') as HTMLButtonElement | null;
       const nextBtn = el.querySelector('[data-usecases-next]') as HTMLButtonElement | null;
-      const stripEl = el.querySelector('[data-usecases-labels]') as HTMLElement | null;
-      const labelBtns = el.querySelectorAll<HTMLButtonElement>('[data-usecases-label-item]');
+      const prevLabel = el.querySelector('[data-usecases-label-prev]') as HTMLButtonElement | null;
+      const currentLabel = el.querySelector('[data-usecases-label-current]') as HTMLButtonElement | null;
+      const nextLabel = el.querySelector('[data-usecases-label-next]') as HTMLButtonElement | null;
       const dots = el.querySelectorAll<HTMLButtonElement>('[data-usecases-dot]');
 
+      // Each slide carries its label in aria-label — use those for the strip.
+      const labels = Array.from(slidesEl.children).map(
+        (s) => s.getAttribute('aria-label') ?? '',
+      );
+      const wrap = (i: number) => ((i % total) + total) % total;
+
       let current = 0;
-      const slotPercent = 100 / 3;
 
       const update = (i: number) => {
-        current = Math.max(0, Math.min(total - 1, i));
+        current = wrap(i);
         slidesEl.style.transform = `translateX(-${current * 100}%)`;
-        if (stripEl) {
-          stripEl.style.transform = `translateX(${(1 - current) * slotPercent}%)`;
-        }
-        labelBtns.forEach((b, bi) => b.classList.toggle('is-active', bi === current));
+        if (prevLabel) prevLabel.textContent = labels[wrap(current - 1)];
+        if (currentLabel) currentLabel.textContent = labels[current];
+        if (nextLabel) nextLabel.textContent = labels[wrap(current + 1)];
         dots.forEach((d, di) => d.classList.toggle('is-active', di === current));
       };
 
       prevBtn?.addEventListener('click', () => update(current - 1));
       nextBtn?.addEventListener('click', () => update(current + 1));
-      labelBtns.forEach((b, bi) => b.addEventListener('click', () => update(bi)));
+      prevLabel?.addEventListener('click', () => update(current - 1));
+      nextLabel?.addEventListener('click', () => update(current + 1));
       dots.forEach((d, di) => d.addEventListener('click', () => update(di)));
+
+      bindSwipe(el, {
+        onPrev: () => update(current - 1),
+        onNext: () => update(current + 1),
+      });
 
       update(0);
     });

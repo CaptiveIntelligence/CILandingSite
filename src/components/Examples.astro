@@ -25,25 +25,47 @@ const hasMultiple = slides.length > 1;
     </div>
 
     <div class="examples__carousel" data-examples-root>
-      {hasMultiple && (
-        <button
-          type="button"
-          class="examples__arrow examples__arrow--prev"
-          data-examples-prev
-          aria-label="Previous example"
-        >
-          <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
-            <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      )}
+      <div class="examples__header">
+        {hasMultiple && (
+          <button
+            type="button"
+            class="examples__arrow examples__arrow--prev"
+            data-examples-prev
+            aria-label="Previous example"
+          >
+            <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        )}
+        <div class="examples__caption-viewport">
+          <div class="examples__caption-strip" data-examples-captions>
+            {slides.map((item) => (
+              <div class="examples__caption">
+                <h3 class="examples__title">{item.title}</h3>
+                {item.text && <p class="examples__text">{item.text}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+        {hasMultiple && (
+          <button
+            type="button"
+            class="examples__arrow examples__arrow--next"
+            data-examples-next
+            aria-label="Next example"
+          >
+            <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        )}
+      </div>
 
       <div class="examples__viewport">
         <div class="examples__slides">
           {slides.map((item) => (
             <div class="examples__slide" role="group" aria-roledescription="slide" aria-label={item.title}>
-              <h3 class="examples__title">{item.title}</h3>
-              {item.text && <p class="examples__text">{item.text}</p>}
               {item.imageUrl && (
                 <img
                   class="examples__image"
@@ -58,35 +80,24 @@ const hasMultiple = slides.length > 1;
       </div>
 
       {hasMultiple && (
-        <button
-          type="button"
-          class="examples__arrow examples__arrow--next"
-          data-examples-next
-          aria-label="Next example"
-        >
-          <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
-            <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+        <div class="examples__dots" role="tablist" aria-label="Examples">
+          {slides.map((item, i) => (
+            <button
+              type="button"
+              class={`examples__dot${i === 0 ? ' is-active' : ''}`}
+              data-examples-dot={i}
+              aria-label={`Go to ${item.title}`}
+            ></button>
+          ))}
+        </div>
       )}
     </div>
-
-    {hasMultiple && (
-      <div class="examples__dots" role="tablist" aria-label="Examples">
-        {slides.map((item, i) => (
-          <button
-            type="button"
-            class={`examples__dot${i === 0 ? ' is-active' : ''}`}
-            data-examples-dot={i}
-            aria-label={`Go to ${item.title}`}
-          ></button>
-        ))}
-      </div>
-    )}
   </div>
 </section>
 
 <script>
+  import { bindSwipe } from '../lib/carouselSwipe';
+
   const init = () => {
     document.querySelectorAll('[data-examples-root]').forEach((root) => {
       const el = root as HTMLElement;
@@ -100,18 +111,26 @@ const hasMultiple = slides.length > 1;
 
       const prevBtn = el.querySelector('[data-examples-prev]') as HTMLButtonElement | null;
       const nextBtn = el.querySelector('[data-examples-next]') as HTMLButtonElement | null;
-      const dots = el.parentElement?.querySelectorAll<HTMLButtonElement>('[data-examples-dot]');
+      const captionsEl = el.querySelector('[data-examples-captions]') as HTMLElement | null;
+      const dots = el.querySelectorAll<HTMLButtonElement>('[data-examples-dot]');
 
       let current = 0;
       const update = (i: number) => {
         current = (i + total) % total;
-        slidesEl.style.transform = `translateX(-${current * 100}%)`;
+        const offset = `translateX(-${current * 100}%)`;
+        slidesEl.style.transform = offset;
+        if (captionsEl) captionsEl.style.transform = offset;
         dots?.forEach((d, di) => d.classList.toggle('is-active', di === current));
       };
 
       prevBtn?.addEventListener('click', () => update(current - 1));
       nextBtn?.addEventListener('click', () => update(current + 1));
       dots?.forEach((d, di) => d.addEventListener('click', () => update(di)));
+
+      bindSwipe(el, {
+        onPrev: () => update(current - 1),
+        onNext: () => update(current + 1),
+      });
     });
   };
 

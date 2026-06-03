@@ -73,6 +73,8 @@ const hasMultiple = slides.length > 1;
 </section>
 
 <script>
+  import { bindSwipe } from '../lib/carouselSwipe';
+
   const init = () => {
     document.querySelectorAll('.logos-bar__carousel').forEach((carousel) => {
       if ((carousel as HTMLElement).dataset.logosInit === '1') return;
@@ -97,6 +99,11 @@ const hasMultiple = slides.length > 1;
       prev?.addEventListener('click', () => update(current - 1));
       next?.addEventListener('click', () => update(current + 1));
       dots?.forEach((d, di) => d.addEventListener('click', () => update(di)));
+
+      bindSwipe(carousel as HTMLElement, {
+        onPrev: () => update(current - 1),
+        onNext: () => update(current + 1),
+      });
     });
   };
 
