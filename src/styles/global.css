@@ -483,7 +483,9 @@ input, select, textarea { font-family: var(--font); }
   color: var(--white);
 }
 .mock-metric__lbl {
+  display: block;
   font-size: 10px;
+  line-height: 1.2;
   color: rgba(255,255,255,.4);
   margin-top: 2px;
 }

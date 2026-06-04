@@ -9,6 +9,12 @@ export interface HeroChartBar {
   value: number;
 }
 
+export interface HeroChartMetric {
+  value: string;
+  label: string;
+  highlight?: boolean;
+}
+
 export interface Props {
   badge: string;
   headline: string;
@@ -18,12 +24,14 @@ export interface Props {
   stats: HeroStat[];
   chartBars?: HeroChartBar[];
   chartCaption?: string;
+  chartMetrics?: HeroChartMetric[];
 }
 
-const { badge, headline, gradientWord, subtext, primaryCtaLabel, stats, chartBars, chartCaption } = Astro.props;
+const { badge, headline, gradientWord, subtext, primaryCtaLabel, stats, chartBars, chartCaption, chartMetrics } = Astro.props;
 
 const bars = (chartBars ?? []).filter((b) => b && typeof b.value === 'number');
 const maxValue = bars.reduce((m, b) => (b.value > m ? b.value : m), 0);
+const metrics = (chartMetrics ?? []).filter((m) => m && (m.value || m.label));
 ---
 
 <section class="hero">
@@ -78,18 +86,12 @@ const maxValue = bars.reduce((m, b) => (b.value > m ? b.value : m), 0);
             <p class="mock-chart__label">{chartCaption}</p>
           </div>
           <div class="mock-metrics">
-            <div class="mock-metric">
-              <span class="mock-metric__val">94.2%</span>
-              <span class="mock-metric__lbl">Loss Ratio Avg</span>
-            </div>
-            <div class="mock-metric mock-metric--highlight">
-              <span class="mock-metric__val">+12.4%</span>
-              <span class="mock-metric__lbl">YoY Growth</span>
-            </div>
-            <div class="mock-metric">
-              <span class="mock-metric__val">$4.2B</span>
-              <span class="mock-metric__lbl">Assets Under Mgmt</span>
-            </div>
+            {metrics.map((metric) => (
+              <div class={`mock-metric${metric.highlight ? ' mock-metric--highlight' : ''}`}>
+                <span class="mock-metric__val">{metric.value}</span>
+                <span class="mock-metric__lbl">{metric.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

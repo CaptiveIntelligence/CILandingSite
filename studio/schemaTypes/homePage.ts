@@ -66,6 +66,25 @@ export const homePage = defineType({
             }),
           ],
         }),
+        defineField({
+          name: 'chartMetrics',
+          title: 'Mock Metric Cards',
+          description: 'The metric tiles shown beside the bar chart in the hero dashboard mock (e.g. "94.2%" / "Loss Ratio Avg"). Enable "Highlight" to give a tile the orange accent style.',
+          type: 'array',
+          of: [
+            defineArrayMember({
+              type: 'object',
+              fields: [
+                defineField({ name: 'value', title: 'Value', type: 'string' }),
+                defineField({ name: 'label', title: 'Label', type: 'string' }),
+                defineField({ name: 'highlight', title: 'Highlight', type: 'boolean', initialValue: false }),
+              ],
+              preview: {
+                select: { title: 'value', subtitle: 'label' },
+              },
+            }),
+          ],
+        }),
       ],
     }),
 

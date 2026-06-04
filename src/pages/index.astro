@@ -47,6 +47,11 @@ const defaultPage = {
       { label: 'Q1', value: 70 },
       { label: 'Q2', value: 85 },
     ],
+    chartMetrics: [
+      { value: '94.2%', label: 'Loss Ratio Avg', highlight: false },
+      { value: '+12.4%', label: 'YoY Growth', highlight: true },
+      { value: '$4.2B', label: 'Assets Under Mgmt', highlight: false },
+    ],
   },
   examples: {
     heading: 'Examples',
@@ -346,6 +351,7 @@ const cta = page?.cta ?? defaultPage.cta;
     stats={hero.stats}
     chartBars={hero.chartBars ?? defaultPage.hero.chartBars}
     chartCaption={hero.chartCaption ?? defaultPage.hero.chartCaption}
+    chartMetrics={hero.chartMetrics?.length ? hero.chartMetrics : defaultPage.hero.chartMetrics}
   />
 
   <Examples
