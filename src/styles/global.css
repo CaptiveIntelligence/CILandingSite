@@ -130,7 +130,7 @@ input, select, textarea { font-family: var(--font); }
   gap: 40px;
 }
 .nav__logo img {
-  height: 36px;
+  max-height: 36px;
   width: auto;
 }
 .nav__links {
@@ -142,6 +142,7 @@ input, select, textarea { font-family: var(--font); }
 .nav__links a {
   font-size: 14px;
   font-weight: 500;
+  line-height: 1.25;
   color: var(--black);
   transition: color var(--transition);
 }
@@ -180,7 +181,7 @@ input, select, textarea { font-family: var(--font); }
 }
 .nav__mobile.open { display: flex; }
 .nav__mobile ul { display: flex; flex-direction: column; gap: 16px; }
-.nav__mobile a { font-size: 16px; font-weight: 500; }
+.nav__mobile a { font-size: 16px; font-weight: 500; line-height: 1.25; }
 
 /* Desktop dropdown */
 .nav__dropdown { position: relative; }
@@ -190,6 +191,8 @@ input, select, textarea { font-family: var(--font); }
   gap: 4px;
   font-size: 14px;
   font-weight: 500;
+  line-height: 1.25;
+  text-align: left;
   color: var(--black);
   background: none;
   border: none;
