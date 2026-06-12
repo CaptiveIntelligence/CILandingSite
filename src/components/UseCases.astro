@@ -45,7 +45,7 @@ const { badge, heading, subtext, tabs } = Astro.props;
               <h3>{tab.heading}</h3>
               <p>{tab.body}</p>
               <ul>
-                {tab.bullets.map((bullet) => (
+                {(tab.bullets || []).map((bullet) => (
                   <li>{bullet}</li>
                 ))}
               </ul>

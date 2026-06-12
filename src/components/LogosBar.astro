@@ -34,7 +34,7 @@ const hasMultiple = slides.length > 1;
             <div class="logos-bar__slide" role="group" aria-roledescription="slide">
               <p class="logos-bar__label">{slide.label}</p>
               <div class="logos-bar__track">
-                {slide.logos.map((name) => (
+                {(slide.logos || []).map((name) => (
                   <div class="logos-bar__item">{name}</div>
                 ))}
               </div>

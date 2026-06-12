@@ -320,8 +320,28 @@ const defaultPage = {
   },
 };
 
-const hero = page?.hero ?? defaultPage.hero;
-const examples = page?.examples ?? defaultPage.examples;
+// Sanity sections are objects whose array sub-fields are all optional, so a
+// partially-filled section can arrive with e.g. `features`/`stats`/`items`
+// undefined. A shallow `?? default` keeps that incomplete object and lets the
+// undefined array reach a component's `.map()`, crashing the build. Deep-merge
+// each section over its default so any missing field falls back individually.
+function isPlainObject(v: any): boolean {
+  return v !== null && typeof v === 'object' && !Array.isArray(v);
+}
+function withDefaults<T>(value: any, fallback: T): T {
+  if (value === undefined || value === null) return fallback;
+  if (isPlainObject(value) && isPlainObject(fallback)) {
+    const out: any = { ...fallback };
+    for (const key of Object.keys(value)) {
+      out[key] = withDefaults(value[key], (fallback as any)[key]);
+    }
+    return out;
+  }
+  return value;
+}
+
+const hero = withDefaults(page?.hero, defaultPage.hero);
+const examples = withDefaults(page?.examples, defaultPage.examples);
 
 const rawLogosBar = page?.logosBar;
 let logosBarSlides;
@@ -332,12 +352,12 @@ if (Array.isArray(rawLogosBar) && rawLogosBar.length > 0) {
 } else {
   logosBarSlides = defaultPage.logosBar;
 }
-const platform = page?.platform ?? defaultPage.platform;
-const dataCoverage = page?.dataCoverage ?? defaultPage.dataCoverage;
-const useCases = page?.useCases ?? defaultPage.useCases;
-const testimonials = page?.testimonials ?? defaultPage.testimonials;
-const about = page?.about ?? defaultPage.about;
-const cta = page?.cta ?? defaultPage.cta;
+const platform = withDefaults(page?.platform, defaultPage.platform);
+const dataCoverage = withDefaults(page?.dataCoverage, defaultPage.dataCoverage);
+const useCases = withDefaults(page?.useCases, defaultPage.useCases);
+const testimonials = withDefaults(page?.testimonials, defaultPage.testimonials);
+const about = withDefaults(page?.about, defaultPage.about);
+const cta = withDefaults(page?.cta, defaultPage.cta);
 ---
 
 <BaseLayout title="Captive Intelligence — CI Data Hub">
