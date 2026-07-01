@@ -26,6 +26,19 @@ const hasMultiple = slides.length > 1;
 
     <div class="examples__carousel" data-examples-root>
       <div class="examples__header">
+        <div class="examples__caption-viewport">
+          <div class="examples__caption-strip" data-examples-captions>
+            {slides.map((item) => (
+              <div class="examples__caption">
+                <h3 class="examples__title">{item.title}</h3>
+                {item.text && <p class="examples__text">{item.text}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="examples__stage">
         {hasMultiple && (
           <button
             type="button"
@@ -38,12 +51,18 @@ const hasMultiple = slides.length > 1;
             </svg>
           </button>
         )}
-        <div class="examples__caption-viewport">
-          <div class="examples__caption-strip" data-examples-captions>
+        <div class="examples__viewport">
+          <div class="examples__slides">
             {slides.map((item) => (
-              <div class="examples__caption">
-                <h3 class="examples__title">{item.title}</h3>
-                {item.text && <p class="examples__text">{item.text}</p>}
+              <div class="examples__slide" role="group" aria-roledescription="slide" aria-label={item.title}>
+                {item.imageUrl && (
+                  <img
+                    class="examples__image"
+                    src={item.imageUrl}
+                    alt={item.imageAlt ?? item.title ?? ''}
+                    loading="lazy"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -60,23 +79,6 @@ const hasMultiple = slides.length > 1;
             </svg>
           </button>
         )}
-      </div>
-
-      <div class="examples__viewport">
-        <div class="examples__slides">
-          {slides.map((item) => (
-            <div class="examples__slide" role="group" aria-roledescription="slide" aria-label={item.title}>
-              {item.imageUrl && (
-                <img
-                  class="examples__image"
-                  src={item.imageUrl}
-                  alt={item.imageAlt ?? item.title ?? ''}
-                  loading="lazy"
-                />
-              )}
-            </div>
-          ))}
-        </div>
       </div>
 
       {hasMultiple && (

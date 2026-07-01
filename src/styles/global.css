@@ -642,15 +642,17 @@ input, select, textarea { font-family: var(--font); }
   position: relative;
 }
 .examples__header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
   margin-bottom: 24px;
 }
 .examples__caption-viewport {
-  flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
   overflow: hidden;
+}
+.examples__stage {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
 }
 .examples__caption-strip {
   display: flex;
@@ -704,26 +706,35 @@ input, select, textarea { font-family: var(--font); }
   border: 1px solid var(--mid-grey);
 }
 .examples__arrow {
-  flex: 0 0 auto;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
-  background: none;
-  border: 0;
-  border-radius: 0;
-  color: var(--orange-light);
-  cursor: pointer;
-  transition: color 150ms ease, transform 150ms ease;
-}
-.examples__arrow:hover {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--mid-grey);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
   color: var(--orange-dark);
-  transform: scale(1.1);
+  cursor: pointer;
+  transition: color 150ms ease, transform 150ms ease, background 150ms ease;
+}
+.examples__arrow--prev { left: 12px; }
+.examples__arrow--next { right: 12px; }
+.examples__arrow svg { width: 28px; height: 28px; }
+.examples__arrow:hover {
+  background: #fff;
+  color: var(--orange-dark);
+  transform: translateY(-50%) scale(1.1);
 }
 .examples__arrow:focus-visible {
   outline: 2px solid var(--orange-dark);
-  outline-offset: 4px;
-  border-radius: 4px;
+  outline-offset: 2px;
 }
 .examples__dots {
   display: flex;
@@ -741,6 +752,20 @@ input, select, textarea { font-family: var(--font); }
 .examples__dot.is-active {
   background: var(--orange-dark);
   transform: scale(1.15);
+}
+/* On wide screens there's room in the gutters — sit the arrows outside
+   the image and drop the overlay button styling. */
+@media (min-width: 1100px) {
+  .examples__arrow {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    color: var(--orange-light);
+  }
+  .examples__arrow--prev { left: -68px; }
+  .examples__arrow--next { right: -68px; }
+  .examples__arrow svg { width: 40px; height: 40px; }
+  .examples__arrow:hover { background: none; color: var(--orange-dark); }
 }
 
 /* ============================================================
@@ -1586,7 +1611,8 @@ input, select, textarea { font-family: var(--font); }
   .footer__bottom { flex-direction: column; gap: 16px; text-align: center; }
   .form-row { grid-template-columns: 1fr; }
   .cta-section__actions { flex-direction: column; align-items: center; }
-  .examples__arrow svg,
+  .examples__arrow { width: 40px; height: 40px; }
+  .examples__arrow svg { width: 22px; height: 22px; }
   .logos-bar__arrow svg,
   .use-cases__arrow svg { width: 32px; height: 32px; }
   /* Only the active label fits on narrow screens — hide its neighbours. */
