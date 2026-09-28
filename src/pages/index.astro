@@ -8,6 +8,7 @@ import DataCoverage from '../components/DataCoverage.astro';
 import UseCases from '../components/UseCases.astro';
 import UseCasesCarousel from '../components/UseCasesCarousel.astro';
 import Testimonials from '../components/Testimonials.astro';
+import Pricing from '../components/Pricing.astro';
 import About from '../components/About.astro';
 import CtaSection from '../components/CtaSection.astro';
 
@@ -279,6 +280,17 @@ const defaultPage = {
       },
     ],
   },
+  pricing: {
+    badge: 'Pricing',
+    heading: 'Simple, transparent pricing',
+    subtext: '',
+    tiers: [
+      { name: '1 Seat', price: '£5,500' },
+      { name: '2 Seats', price: '£7,500' },
+      { name: '5 Seats', price: '£12,500' },
+      { name: 'Enterprise', price: 'On Request' },
+    ],
+  },
   about: {
     badge: 'About Captive Intelligence',
     heading: 'Data specialists for a specialised market',
@@ -356,6 +368,7 @@ const platform = withDefaults(page?.platform, defaultPage.platform);
 const dataCoverage = withDefaults(page?.dataCoverage, defaultPage.dataCoverage);
 const useCases = withDefaults(page?.useCases, defaultPage.useCases);
 const testimonials = withDefaults(page?.testimonials, defaultPage.testimonials);
+const pricing = withDefaults(page?.pricing, defaultPage.pricing);
 const about = withDefaults(page?.about, defaultPage.about);
 const cta = withDefaults(page?.cta, defaultPage.cta);
 ---
@@ -421,6 +434,13 @@ const cta = withDefaults(page?.cta, defaultPage.cta);
     items={testimonials.items}
   />
 
+  <Pricing
+    badge={pricing.badge}
+    heading={pricing.heading}
+    subtext={pricing.subtext}
+    tiers={pricing.tiers?.length ? pricing.tiers : defaultPage.pricing.tiers}
+  />
+
   <About
     badge={about.badge}
     heading={about.heading}
@@ -451,7 +471,7 @@ const cta = withDefaults(page?.cta, defaultPage.cta);
       );
 
       document.querySelectorAll(
-        '.feature-card, .coverage-card, .testimonial-card, .value-card, .coverage-detail'
+        '.feature-card, .coverage-card, .testimonial-card, .value-card, .pricing-card, .coverage-detail'
       ).forEach(el => {
         el.classList.add('anim-target');
         observer.observe(el);

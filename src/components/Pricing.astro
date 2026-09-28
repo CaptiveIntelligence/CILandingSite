@@ -1,0 +1,36 @@
+---
+export interface PricingTier {
+  name: string;
+  price: string;
+  note?: string;
+  featured?: boolean;
+}
+
+export interface Props {
+  badge: string;
+  heading: string;
+  subtext: string;
+  tiers: PricingTier[];
+}
+
+const { badge, heading, subtext, tiers } = Astro.props;
+---
+
+<section class="section section--light" id="pricing">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__badge">{badge}</div>
+      <h2>{heading}</h2>
+      {subtext && <p>{subtext}</p>}
+    </div>
+    <div class="pricing-grid">
+      {(tiers || []).map((tier) => (
+        <div class={`pricing-card${tier.featured ? ' pricing-card--featured' : ''}`}>
+          <h3 class="pricing-card__name">{tier.name}</h3>
+          <div class="pricing-card__price">{tier.price}</div>
+          {tier.note && <p class="pricing-card__note">{tier.note}</p>}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

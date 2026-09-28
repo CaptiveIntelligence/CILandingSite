@@ -1249,7 +1249,7 @@ input, select, textarea { font-family: var(--font); }
   gap: 20px;
 }
 .value-card {
-  background: var(--off-white);
+  background: var(--white);
   border: 1px solid var(--mid-grey);
   border-radius: var(--radius);
   padding: 24px;
@@ -1276,6 +1276,52 @@ input, select, textarea { font-family: var(--font); }
   margin-bottom: 6px;
 }
 .value-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+/* ============================================================
+   PRICING
+   ============================================================ */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.pricing-card {
+  background: var(--off-white);
+  border: 1px solid var(--mid-grey);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  text-align: center;
+  transition: all var(--transition);
+}
+.pricing-card:hover {
+  border-color: var(--orange-dark);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+.pricing-card--featured {
+  background: linear-gradient(135deg, #fff8f5, #fff3ed);
+  border-color: rgba(227,100,53,.2);
+}
+.pricing-card__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: .01em;
+  margin-bottom: 12px;
+}
+.pricing-card__price {
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--black);
+}
+.pricing-card__note {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 10px;
+}
 
 /* ============================================================
    CTA SECTION
@@ -1587,6 +1633,7 @@ input, select, textarea { font-family: var(--font); }
   .hero__visual { display: none; }
   .features-grid { grid-template-columns: 1fr 1fr; }
   .feature-card--large { grid-column: span 2; }
+  .pricing-grid { grid-template-columns: repeat(2, 1fr); }
   .coverage-grid { grid-template-columns: repeat(2, 1fr); }
   .coverage-detail { grid-template-columns: 1fr; gap: 40px; }
   .about-split { grid-template-columns: 1fr; gap: 48px; }
@@ -1601,6 +1648,7 @@ input, select, textarea { font-family: var(--font); }
   .hero__stat-divider { display: none; }
   .features-grid { grid-template-columns: 1fr; }
   .feature-card--large { grid-column: span 1; }
+  .pricing-grid { grid-template-columns: 1fr 1fr; }
   .coverage-grid { grid-template-columns: 1fr 1fr; }
   .use-case-tabs { flex-direction: column; }
   .use-case-body { grid-template-columns: 1fr; gap: 28px; padding: 28px; }
@@ -1638,6 +1686,7 @@ input, select, textarea { font-family: var(--font); }
   .container { padding: 0 16px; }
   .section { padding: 64px 0; }
   .coverage-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
   .footer__links { grid-template-columns: 1fr 1fr; }
   .modal { padding: 28px 20px; }
 }

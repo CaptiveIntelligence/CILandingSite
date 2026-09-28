@@ -332,6 +332,42 @@ export const homePage = defineType({
       ],
     }),
 
+    // ── Pricing ───────────────────────────────────────────────────────────
+    defineField({
+      name: 'pricing',
+      title: 'Pricing Section',
+      type: 'object',
+      fields: [
+        defineField({ name: 'badge', title: 'Badge', type: 'string' }),
+        defineField({ name: 'heading', title: 'Heading', type: 'string' }),
+        defineField({ name: 'subtext', title: 'Subtext (optional)', type: 'text', rows: 2 }),
+        defineField({
+          name: 'tiers',
+          title: 'Tiers',
+          type: 'array',
+          of: [
+            defineArrayMember({
+              type: 'object',
+              fields: [
+                defineField({ name: 'name', title: 'Name', type: 'string' }),
+                defineField({ name: 'price', title: 'Price', type: 'string' }),
+                defineField({ name: 'note', title: 'Note (optional)', type: 'string' }),
+                defineField({
+                  name: 'featured',
+                  title: 'Highlight this tier',
+                  type: 'boolean',
+                  initialValue: false,
+                }),
+              ],
+              preview: {
+                select: { title: 'name', subtitle: 'price' },
+              },
+            }),
+          ],
+        }),
+      ],
+    }),
+
     // ── About ─────────────────────────────────────────────────────────────
     defineField({
       name: 'about',
