@@ -3,6 +3,7 @@ export interface PricingTier {
   name: string;
   price: string;
   note?: string;
+  features?: string[];
   featured?: boolean;
 }
 
@@ -29,6 +30,11 @@ const { badge, heading, subtext, tiers } = Astro.props;
           <h3 class="pricing-card__name">{tier.name}</h3>
           <div class="pricing-card__price">{tier.price}</div>
           {tier.note && <p class="pricing-card__note">{tier.note}</p>}
+          {tier.features?.length ? (
+            <ul class="pricing-card__features">
+              {tier.features.map((feature) => <li>{feature}</li>)}
+            </ul>
+          ) : null}
         </div>
       ))}
     </div>

@@ -353,6 +353,12 @@ export const homePage = defineType({
                 defineField({ name: 'price', title: 'Price', type: 'string' }),
                 defineField({ name: 'note', title: 'Note (optional)', type: 'string' }),
                 defineField({
+                  name: 'features',
+                  title: 'Bullet Points',
+                  type: 'array',
+                  of: [defineArrayMember({ type: 'string' })],
+                }),
+                defineField({
                   name: 'featured',
                   title: 'Highlight this tier',
                   type: 'boolean',
