@@ -32,7 +32,7 @@
 html {
   scroll-behavior: smooth;
   /* Keep anchor targets (e.g. /#insights-bar) clear of the fixed nav */
-  scroll-padding-top: calc(var(--nav-h) + 16px);
+  scroll-padding-top: var(--nav-h);
   font-size: 16px;
 }
 
