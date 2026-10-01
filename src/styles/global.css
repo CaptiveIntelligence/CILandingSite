@@ -29,7 +29,12 @@
   --transition: .22s ease;
 }
 
-html { scroll-behavior: smooth; font-size: 16px; }
+html {
+  scroll-behavior: smooth;
+  /* Keep anchor targets (e.g. /#insights-bar) clear of the fixed nav */
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+  font-size: 16px;
+}
 
 body {
   font-family: var(--font);
