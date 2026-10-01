@@ -133,6 +133,36 @@ const hasMultiple = slides.length > 1;
         onPrev: () => update(current - 1),
         onNext: () => update(current + 1),
       });
+
+      // Auto-advance. Hovering or focusing pauses it; clicking, tapping or
+      // swiping stops it for good. Skipped for reduced-motion users.
+      const AUTO_DELAY = 5000;
+      let timer: number | undefined;
+      let stopped = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let hovered = false;
+      let focused = false;
+
+      const pause = () => {
+        window.clearInterval(timer);
+        timer = undefined;
+      };
+      const resume = () => {
+        if (stopped || hovered || focused || document.hidden || timer) return;
+        timer = window.setInterval(() => update(current + 1), AUTO_DELAY);
+      };
+      const stop = () => {
+        stopped = true;
+        pause();
+      };
+
+      el.addEventListener('mouseenter', () => { hovered = true; pause(); });
+      el.addEventListener('mouseleave', () => { hovered = false; resume(); });
+      el.addEventListener('focusin', () => { focused = true; pause(); });
+      el.addEventListener('focusout', () => { focused = false; resume(); });
+      el.addEventListener('pointerdown', stop);
+      document.addEventListener('visibilitychange', () => (document.hidden ? pause() : resume()));
+
+      resume();
     });
   };
 
