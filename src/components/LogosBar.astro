@@ -1,7 +1,13 @@
 ---
+export interface Company {
+  name: string;
+  logoUrl?: string;
+}
+
 export interface Slide {
   label: string;
-  logos: string[];
+  // Plain strings are legacy entries from before logos could be uploaded
+  logos: (Company | string)[];
 }
 
 export interface Props {
@@ -34,9 +40,16 @@ const hasMultiple = slides.length > 1;
             <div class="logos-bar__slide" role="group" aria-roledescription="slide">
               <p class="logos-bar__label">{slide.label}</p>
               <div class="logos-bar__track">
-                {(slide.logos || []).map((name) => (
-                  <div class="logos-bar__item">{name}</div>
-                ))}
+                {(slide.logos || []).map((entry) => {
+                  const { name, logoUrl } = typeof entry === 'string' ? { name: entry, logoUrl: undefined } : entry;
+                  return logoUrl ? (
+                    <div class="logos-bar__item logos-bar__item--logo">
+                      <img src={logoUrl} alt={name ?? ''} loading="lazy" />
+                    </div>
+                  ) : (
+                    <div class="logos-bar__item">{name}</div>
+                  );
+                })}
               </div>
             </div>
           ))}

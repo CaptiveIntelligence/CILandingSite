@@ -10,6 +10,17 @@ export const PAGE_QUERY = `{
         "imageAlt": image.alt
       }
     },
+    // Projecting a plain string yields null, so legacy string-only lists pass through untouched
+    logosBar[]{
+      ...,
+      "logos": select(
+        count(logos[_type == "company"]) > 0 => logos[]{
+          ...,
+          "logoUrl": logo.asset->url
+        },
+        logos
+      )
+    },
     useCases{
       ...,
       tabs[]{

@@ -137,9 +137,32 @@ export const homePage = defineType({
             defineField({ name: 'label', title: 'Label', type: 'string' }),
             defineField({
               name: 'logos',
-              title: 'Company Names',
+              title: 'Companies',
               type: 'array',
-              of: [defineArrayMember({ type: 'string' })],
+              of: [
+                defineArrayMember({
+                  name: 'company',
+                  title: 'Company',
+                  type: 'object',
+                  fields: [
+                    defineField({
+                      name: 'name',
+                      title: 'Company Name',
+                      type: 'string',
+                      validation: (rule) => rule.required(),
+                    }),
+                    defineField({
+                      name: 'logo',
+                      title: 'Logo',
+                      description: 'Optional. If supplied, the logo is shown instead of the company name.',
+                      type: 'image',
+                    }),
+                  ],
+                  preview: {
+                    select: { title: 'name', media: 'logo' },
+                  },
+                }),
+              ],
             }),
           ],
           preview: {

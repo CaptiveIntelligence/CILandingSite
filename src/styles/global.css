@@ -510,6 +510,7 @@ input, select, textarea { font-family: var(--font); }
 }
 .logos-bar__track {
   display: flex;
+  align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 12px 36px;
@@ -520,6 +521,16 @@ input, select, textarea { font-family: var(--font); }
   color: var(--text-muted);
   opacity: .6;
   letter-spacing: -0.01em;
+}
+.logos-bar__item--logo {
+  display: flex;
+  align-items: center;
+}
+.logos-bar__item--logo img {
+  height: 28px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
 }
 .logos-bar__carousel {
   position: relative;
