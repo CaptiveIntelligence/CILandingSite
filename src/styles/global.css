@@ -601,6 +601,87 @@ input, select, textarea { font-family: var(--font); }
 }
 
 /* ============================================================
+   INSIGHTS BAR
+   ============================================================ */
+.insights-bar {
+  padding: 32px 0;
+  background: var(--light-grey);
+  border-top: 1px solid var(--mid-grey);
+  border-bottom: 1px solid var(--mid-grey);
+}
+.insights-bar__carousel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.insights-bar__viewport {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 4px; /* matches track padding so the first item snaps flush */
+  scrollbar-width: none;
+}
+.insights-bar__viewport::-webkit-scrollbar { display: none; }
+.insights-bar__track {
+  display: flex;
+  gap: 36px;
+  width: max-content;
+  margin: 0 auto;
+  padding: 4px;
+  list-style: none;
+}
+.insights-bar__item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+.insights-bar__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 160px;
+  text-align: center;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.insights-bar__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(227,100,53,.1);
+  color: var(--orange-dark);
+  transition: background var(--transition), color var(--transition);
+}
+.insights-bar__label {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  transition: color var(--transition);
+}
+.insights-bar__link:hover .insights-bar__icon {
+  background: var(--orange-dark);
+  color: var(--white);
+}
+.insights-bar__link:hover .insights-bar__label { color: var(--orange-dark); }
+.insights-bar__link:focus-visible {
+  outline: 2px solid var(--orange-dark);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.insights-bar__arrow:disabled {
+  opacity: .3;
+  cursor: default;
+  transform: none;
+  color: var(--text-light);
+}
+.insights-bar__carousel.is-static .insights-bar__arrow { visibility: hidden; }
+
+/* ============================================================
    SECTIONS — shared
    ============================================================ */
 .section { padding: 100px 0; }
@@ -1713,6 +1794,7 @@ input, select, textarea { font-family: var(--font); }
   .examples__arrow { width: 40px; height: 40px; }
   .examples__arrow svg { width: 22px; height: 22px; }
   .logos-bar__arrow svg,
+  .insights-bar__arrow svg,
   .use-cases__arrow svg { width: 32px; height: 32px; }
   /* Only the active label fits on narrow screens — hide its neighbours. */
   .use-cases__label[data-usecases-label-prev],

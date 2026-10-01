@@ -283,6 +283,46 @@ export const homePage = defineType({
       ],
     }),
 
+    // ── Insights Bar ──────────────────────────────────────────────────────
+    defineField({
+      name: 'insightsBar',
+      title: 'Insights Bar (Downloads)',
+      description: 'Shown directly above the Insights section. Hidden when there are no downloads.',
+      type: 'object',
+      fields: [
+        defineField({ name: 'label', title: 'Label', type: 'string' }),
+        defineField({
+          name: 'downloads',
+          title: 'Downloads',
+          type: 'array',
+          of: [
+            defineArrayMember({
+              name: 'download',
+              title: 'Download',
+              type: 'object',
+              fields: [
+                defineField({
+                  name: 'label',
+                  title: 'Label',
+                  type: 'string',
+                  validation: (rule) => rule.required(),
+                }),
+                defineField({
+                  name: 'file',
+                  title: 'File',
+                  type: 'file',
+                  validation: (rule) => rule.required(),
+                }),
+              ],
+              preview: {
+                select: { title: 'label', subtitle: 'file.asset.originalFilename' },
+              },
+            }),
+          ],
+        }),
+      ],
+    }),
+
     // ── Use Cases ─────────────────────────────────────────────────────────
     defineField({
       name: 'useCases',

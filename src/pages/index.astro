@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import Examples from '../components/Examples.astro';
 import LogosBar from '../components/LogosBar.astro';
+import InsightsBar from '../components/InsightsBar.astro';
 import Platform from '../components/Platform.astro';
 import DataCoverage from '../components/DataCoverage.astro';
 import UseCases from '../components/UseCases.astro';
@@ -364,6 +365,7 @@ if (Array.isArray(rawLogosBar) && rawLogosBar.length > 0) {
 } else {
   logosBarSlides = defaultPage.logosBar;
 }
+const insightsBar = page?.insightsBar ?? {};
 const platform = withDefaults(page?.platform, defaultPage.platform);
 const dataCoverage = withDefaults(page?.dataCoverage, defaultPage.dataCoverage);
 const useCases = withDefaults(page?.useCases, defaultPage.useCases);
@@ -413,6 +415,8 @@ const cta = withDefaults(page?.cta, defaultPage.cta);
     domiciles={dataCoverage.domiciles}
     ctaLabel={dataCoverage.ctaLabel}
   />
+
+  <InsightsBar label={insightsBar.label} downloads={insightsBar.downloads ?? []} />
 
   <UseCases
     badge={useCases.badge}

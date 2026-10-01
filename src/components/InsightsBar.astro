@@ -1,0 +1,105 @@
+---
+export interface Download {
+  label: string;
+  fileUrl?: string;
+  fileName?: string;
+}
+
+export interface Props {
+  label?: string;
+  downloads: Download[];
+}
+
+const { label, downloads } = Astro.props;
+// Sanity's `?dl=` param serves the file as an attachment; the `download`
+// attribute alone is ignored for cross-origin URLs like the Sanity CDN.
+const items = (downloads ?? [])
+  .filter((d) => d?.fileUrl && d?.label)
+  .map((d) => ({ ...d, href: `${d.fileUrl}?dl=${encodeURIComponent(d.fileName ?? '')}` }));
+---
+
+{items.length > 0 && (
+  <section class="insights-bar">
+    <div class="container">
+      {label && <p class="logos-bar__label">{label}</p>}
+      <div class="insights-bar__carousel" data-insights-root>
+        <button
+          type="button"
+          class="logos-bar__arrow insights-bar__arrow"
+          data-insights-prev
+          aria-label="Previous downloads"
+        >
+          <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div class="insights-bar__viewport" data-insights-viewport>
+          <ul class="insights-bar__track">
+            {items.map((item) => (
+              <li class="insights-bar__item">
+                <a class="insights-bar__link" href={item.href} download={item.fileName ?? ''}>
+                  <span class="insights-bar__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                      <path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span class="insights-bar__label">{item.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <button
+          type="button"
+          class="logos-bar__arrow insights-bar__arrow"
+          data-insights-next
+          aria-label="Next downloads"
+        >
+          <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+)}
+
+<script>
+  const init = () => {
+    document.querySelectorAll<HTMLElement>('[data-insights-root]').forEach((root) => {
+      if (root.dataset.insightsInit === '1') return;
+      root.dataset.insightsInit = '1';
+
+      const viewport = root.querySelector<HTMLElement>('[data-insights-viewport]');
+      const prev = root.querySelector<HTMLButtonElement>('[data-insights-prev]');
+      const next = root.querySelector<HTMLButtonElement>('[data-insights-next]');
+      if (!viewport || !prev || !next) return;
+
+      // Arrows page through the list by one viewport width; touch users can
+      // also swipe since the viewport scrolls natively.
+      const page = (dir: number) => {
+        viewport.scrollBy({ left: dir * viewport.clientWidth * 0.8, behavior: 'smooth' });
+      };
+      prev.addEventListener('click', () => page(-1));
+      next.addEventListener('click', () => page(1));
+
+      const sync = () => {
+        const max = viewport.scrollWidth - viewport.clientWidth;
+        root.classList.toggle('is-static', max <= 1);
+        prev.disabled = viewport.scrollLeft <= 4;
+        next.disabled = viewport.scrollLeft >= max - 4;
+      };
+      viewport.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>

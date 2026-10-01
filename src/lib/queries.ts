@@ -21,6 +21,14 @@ export const PAGE_QUERY = `{
         logos
       )
     },
+    insightsBar{
+      ...,
+      downloads[]{
+        label,
+        "fileUrl": file.asset->url,
+        "fileName": file.asset->originalFilename
+      }
+    },
     useCases{
       ...,
       tabs[]{
