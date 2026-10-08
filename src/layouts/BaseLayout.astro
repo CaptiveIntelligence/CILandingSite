@@ -11,7 +11,7 @@ export interface Props {
 
 const { title, description = 'CI Data Hub — The definitive data platform for captive insurance.' } = Astro.props;
 
-type NavData = { links: { label: string; href: string }[]; demoButtonLabel: string };
+type NavData = { links: { label: string; href: string }[]; demoButtonLabel: string; signInLabel?: string };
 type FooterData = { tagline: string; columns: { heading: string; links: { label: string; href: string }[] }[]; legalLinks: { label: string; href: string }[]; copyright: string };
 type DemoModalData = { heading: string; subtext: string; successHeading: string; successBody: string };
 
@@ -80,7 +80,7 @@ if (projectId) {
   try {
     const { sanityClient } = await import('../lib/sanity');
     const settings = await sanityClient.fetch(`*[_type == "siteSettings"][0]{
-      nav { links[] { label, href }, demoButtonLabel },
+      nav { links[] { label, href }, demoButtonLabel, signInLabel },
       demoModal { heading, subtext, successHeading, successBody },
       footer { tagline, columns[] { heading, links[] { label, href } }, legalLinks[] { label, href }, copyright }
     }`);
@@ -109,6 +109,7 @@ if (projectId) {
   <Nav
     links={nav.links}
     demoButtonLabel={nav.demoButtonLabel}
+    signInLabel={nav.signInLabel || undefined}
   />
 
   <slot />

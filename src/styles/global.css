@@ -159,6 +159,10 @@ input, select, textarea { font-family: var(--font); }
   align-items: center;
   gap: 10px;
 }
+/* Keep the login link and demo button the same height */
+.nav__cta .btn, .nav__mobile .btn { line-height: 1.2; }
+.nav__mobile .btn { font-size: 15px; }
+.nav__cta .btn--primary, .nav__mobile .btn--primary { border: 1.5px solid transparent; }
 .nav__burger {
   display: none;
   flex-direction: column;
@@ -1785,7 +1789,7 @@ input, select, textarea { font-family: var(--font); }
   .nav__links { gap: 20px; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .nav__links, .nav__cta { display: none; }
   .nav__burger { display: flex; }
 }
