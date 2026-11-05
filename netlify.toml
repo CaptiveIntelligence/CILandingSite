@@ -4,3 +4,9 @@
 
 [context.staging.environment]
   SANITY_DATASET = "staging"
+
+[[headers]]
+  for = "/cdn/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=31536000"
